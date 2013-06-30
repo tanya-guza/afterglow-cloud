@@ -1,2 +1,7 @@
 *.swp
 *.pyc
+afterglow_cloud/afterglow_cloud/settings.py
+*.db
+afterglow_cloud/afterglow_cloud/app/static/rendered
+afterglow_cloud/user_*
+*.*~
