@@ -1,0 +1,3 @@
+[submodule "afterglow"]
+	path = afterglow
+	url = git@github.com:tanya-guza/afterglow.git
