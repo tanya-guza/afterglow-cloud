@@ -291,7 +291,7 @@ def _render(request, parsedData, loggly=False, logglyData=None):
 
         propertyFile = "user_config/" + requestID + ".property"
         outputFile = "afterglow_cloud/app/static/rendered/" + requestID + ".gif"
-        afPath = "../afterglow/src/afterglow.pl"
+        afPath = "../afterglow/afterglow.pl"
 
         #Try rendering a graph, store the return code from the shell script.
 
