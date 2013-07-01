@@ -290,7 +290,7 @@ def _render(request, parsedData, loggly=False, logglyData=None):
             dataFile = "user_data/" + requestID + ".csv"
 
         propertyFile = "user_config/" + requestID + ".property"
-        outputFile = "afterglow_cloud/app/static/rendered/" + requestID + ".gif"
+        outputFile = "afterglow_cloud/app/static/rendered/" + requestID + ".json"
         afPath = "../afterglow/afterglow.pl"
 
         #Try rendering a graph, store the return code from the shell script.
@@ -931,9 +931,9 @@ def galleryProcess(request):
             # it doesn't get pruned (_cleanFiles).
             staticPath = os.path.join(settings.PROJECT_PATH, "app/static/")
 
-            renderedFile = staticPath + "rendered/" + request.session['requestID'] + ".gif"
+            renderedFile = staticPath + "rendered/" + request.session['requestID'] + ".json"
 
-            outputFile = staticPath + "gallery/" + request.session['requestID'] + ".gif"
+            outputFile = staticPath + "gallery/" + request.session['requestID'] + ".json"
 
             copyfile(renderedFile, outputFile)
 
@@ -972,7 +972,7 @@ def _generateThumbnail(staticPath, requestID):
     None.
     '''
 
-    pic = open(staticPath + "gallery/" + requestID + ".gif")
+    pic = open(staticPath + "gallery/" + requestID + ".json.gif")
 
     exportName = staticPath + "gallery_thumbs/" + requestID
 

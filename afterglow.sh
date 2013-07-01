@@ -106,7 +106,8 @@ args="$@"
 	fi
 
 #Everything looks good for now; render the graph.
-perl "$afPath" -i "$dataFile" -c "$propertyFile" $args | "$filter" -Tgif -o "$outputFile"
+perl "$afPath" -i "$dataFile" -c "$propertyFile" $args -j > "$outputFile"
+perl "$afPath" -i "$dataFile" -c "$propertyFile" $args | "$filter" -Tgif -o "$outputFile.gif"
 
 #Check if the output was successfuly rendered and that the output file is
 #more than 0 bytes in size.

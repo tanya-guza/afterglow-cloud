@@ -7,6 +7,10 @@
 {% block extra_head %}
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/render.js"></script>
+    <script src="{{ STATIC_URL }}js/helios/lib/q.min.js"></script>
+    <script src="{{ STATIC_URL }}js/helios/lib/uuid.js"></script>
+    <script src="{{ STATIC_URL }}js/helios/lib/q-comm.js"></script>
+    <script src="{{ STATIC_URL }}js/helios/helios.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -104,10 +108,10 @@
 			<br/><br/>
 
 			<b>Rendered Graph</b>:
-			<center>
-				<a href="process" title="Back">Render another graph</a><br/><br/>
-				<img src="{{ STATIC_URL }}rendered/{{ requestID }}.gif" alt="" id="outputImage"/>
-			</center>
+            <script type="text/javascript">
+                var g = new Helios.GraphDatabase();
+                g.loadGraphSON('{{ STATIC_URL }}rendered/{{ requestID }}.json');
+            </script>
 
 		{% else %}
 
