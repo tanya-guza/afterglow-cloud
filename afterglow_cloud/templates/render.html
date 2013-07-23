@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% block extra_head %}
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/render.js"></script>
+	<script src="{{ STATIC_URL }}js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}js/render.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}js/helios/lib/q.min.js"></script>
     <script src="{{ STATIC_URL }}js/helios/lib/uuid.js"></script>
     <script src="{{ STATIC_URL }}js/helios/lib/q-comm.js"></script>
@@ -118,9 +118,8 @@ g.loadGraphSON('{{ STATIC_URL }}rendered/{{ requestID }}.json');
 
                 g.E().then(function(edges){
                     g.V().then(function(vertices){
-
                           var graph = d3.graphson.facade(edges, vertices);
-                        console.log(graph.edges);
+                        console.log(graph);
                           force
                               .nodes(graph.vertices)
                               .links(graph.edges)
