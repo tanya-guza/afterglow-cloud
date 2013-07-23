@@ -1,512 +1,515 @@
 {% extends "base.html" %}
 
 {% block title %}
-	Render Graph - Afterglow
-{% endblock %}
-
-{% block extra_head %}	
-	<link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}css/jquery.miniColors.css" />
-	<link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}css/tipTip.css" />
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.miniColors.min.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.tipTip.js"></script>
-	<script type="text/javascript" src="{{ STATIC_URL }}js/form.js"></script>
+    Render Graph - Afterglow
 {% endblock %}
 
 {% block body %}
 
-	{% if form.errors %}
-		<div class="cRenderError"><span class="cErrorMsg">
+    {% if form.errors %}
+        <div class="cRenderError"><span class="cErrorMsg">
 			Please correct the error{{ form.errors|pluralize }} below.
-		</div></span>
-	{% endif %}
-	
-	{% if afLogglyRevoked %}
-		<span class="success">You have revoked access to the subdomain from our end.</span>
-	{% endif %}
+		</span></div>
+    {% endif %}
 
-	<form enctype="multipart/form-data" method="post" action="process" id="renderMainForm">
-		{% csrf_token %}
-		
-		<div class="field">
-		
-			<label>Source:</label>	
-			<input type="radio" name="xLogType" checked="checked" value="data"/>CSV Data
-			<input type="radio" name="xLogType" value="log" class="configTypeRadio"/>Log File
-			<input type="radio" name="xLogType" value="loggly" class="configTypeRadio"/>Loggly
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a href="#" class="tooltip" title="Select the source of your data. Choose CSV to upload an already parsed log; Choose 'Lof File' to upload a generated log and then use a RegEx to parse it automatically to a CSV file for AfterGlow or use an account you have with Loggly.com to bring in your logs to AfterGlow.">?</a>
-		</div>
-		
-		<div class="field" id="loggly">
+    {% if afLogglyRevoked %}
+        <span class="success">You have revoked access to the subdomain from our end.</span>
+    {% endif %}
 
-			{{ form.logglySubdomain.errors }}
-			<label>Loggly Subdomain:</label>
-			{{ form.logglySubdomain }}
-			 <a href="#" class="tooltip" title="Enter your account subdomain at Loggly. E.g: 'foo.loggly.com'">?</a>
-			<div class="cError"><span id="subdomainE" class="cErrorMsg"></span></div>
-		</div>
-		
-		{% if afLogglySet %}
-		
-			<div id="logglySetMsg">
+    <form enctype="multipart/form-data" method="post" action="process" id="renderMainForm">
+    {% csrf_token %}
+
+    <fieldset id="inputSources"
+              data-placement="bottom"
+              data-trigger="hover"
+              title="Select the source of your data. Choose CSV to upload an already parsed log; Choose 'Lof File' to upload a generated log and then use a RegEx to parse it automatically to a CSV file for AfterGlow or use an account you have with Loggly.com to bring in your logs to AfterGlow.">
+        <legend>Input source</legend>
+        <label class="radio inline">
+            <input type="radio" name="xLogType" checked="checked" value="data"/>
+            CSV Data
+        </label>
+
+        <label class="radio inline">
+            <input type="radio" name="xLogType" value="log" class="configTypeRadio"/>Log File
+        </label>
+
+        <label class="radio inline">
+            <input type="radio" name="xLogType" value="loggly" class="configTypeRadio"/>Loggly
+        </label>
+    </fieldset>
+
+    <fieldset id="loggly" class="hide">
+
+        {{ form.logglySubdomain.errors }}
+        <label>Loggly Subdomain:</label>
+        {{ form.logglySubdomain }}
+        <a href="#" class="tooltip" title="Enter your account subdomain at Loggly. E.g: 'foo.loggly.com'">?</a>
+        <div class="cError"><span id="subdomainE" class="cErrorMsg"></span></div>
+
+
+        {% if afLogglySet %}
+
+            <div id="logglySetMsg">
 				<span class="success">
 					You've previously authorized AfterGlow for the subdomain: <b>{{ afLogglySubdomain }}</b>.loggly.com
-				</span> 
-				<a href="revoke" alt="Revoke access to AfterGlow from your Loggly subdomain">Revoke Access</a>
-			</div>
-			
-		{% endif %}
+				</span>
+                <a href="revoke" alt="Revoke access to AfterGlow from your Loggly subdomain">Revoke Access</a>
+            </div>
 
-		<div class="field" id="file">
+        {% endif %}
 
-			{{ form.dataFile.errors }}
-			<label>File:</label>
-			{{ form.dataFile }} 
-			<div class="cError"><span id="dataFileE" class="cErrorMsg"></span></div>
+    </fieldset>
+    <br>
+    <fieldset id="file" class="hide">
 
-		</div>
-		
-		<div class="field" id="regEx">
+        {{ form.dataFile.errors }}
+        <label>File
+            {{ form.dataFile }}
+        </label>
+        <div class="cError"><span id="dataFileE" class="cErrorMsg"></span></div>
 
-			{{ form.regEx.errors }}
-			<label>Reg Ex:</label>
-			{{ form.regExType }} <div id="regExInputs">||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			{{ form.regEx }} 
-			{{ form.regExChoices }} <a href="#" class="tooltip" title="Enter a custom regular expression or choose from a list of predefined (already saved) expressions to parse your log into a CSV file. You will have to appropriately have groupings in your expressions for each column. You will also have to check 'Two node mode' below if you're trying to parse the file into two columns.">?</a>
-			</div>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<div id="regDesc"></div>
 
-		</div>
-		
-		<div class="clear"></div>
-		
-		<div id="saveRegEx">
-			<div class="field">
-	
-				<label>Save RegEx:</label>
-				{{ form.saveRegEx }} <a href="#" class="tooltip" title="When checked, you can can save your custom expression for others users to use as a parser in the future.">?</a>
-	
-			</div>
-			
-			
-			<fieldset id="saveRegExDetails">
-				
-				<legend>RegEx Details:</legend>
-				<div class="field">
-					<label>Name:</label>
-					{{ form.saveRegExName }} <a href="#" class="tooltip" title="Enter a name for your expression. E.g: 'Apache - IP;Size'">?</a>
-					{{ form.saveRegExName.errors }}
-				</div>
-				
-				<div class="field">
-					<label>Description:</label>
-					{{ form.saveRegExDescription }} <a href="#" class="tooltip" title="Enter a description for your expression.">?</a>
-					{{ form.saveRegExDescription.errors }}
-				</div>
-				
-				<br/>
-				<div class="smallText">
-					Enter a name and description for submitting your expression, so that other users can use your expression. Your description should be at least ten characters in length.
-				</div>
-				
-			</fieldset>
-		</div>
+    </fieldset>
 
-		<div class="field">
+    <fieldset id="regex" class="hide">
+        {{ form.regEx.errors }}
+        <label>Reg Ex:</label>
+        {{ form.regExType }} <div id="regExInputs">||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {{ form.regEx }}
+        {{ form.regExChoices }} <a href="#" class="tooltip" title="Enter a custom regular expression or choose from a list of predefined (already saved) expressions to parse your log into a CSV file. You will have to appropriately have groupings in your expressions for each column. You will also have to check 'Two node mode' below if you're trying to parse the file into two columns.">?</a>
+    </div>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<div id="regDesc"></div>
 
-			{{ form.twoNodeMode.errors }}
-			<label>Two node mode:</label>
-			{{ form.twoNodeMode }} <a href="#" class="tooltip" title="When using data with two columns, this option should be checked.">?</a>
 
-		</div>
+        <div class="field">
 
-		<div id="settingsLabel"> Settings: </div>
+            <label>Save RegEx:</label>
+            {{ form.saveRegEx }} <a href="#" class="tooltip" title="When checked, you can can save your custom expression for others users to use as a parser in the future.">?</a>
 
-		<div id="mainSettings">
+        </div>
 
-			<div class="field"> 
 
-				{{ form.printNodeCount.errors }}
-				<label>Print node count:</label>
-				{{ form.printNodeCount }} <a href="#" class="tooltip" title="Check to print the number of instances of each node present.">?</a>
+        <fieldset id="saveRegExDetails">
 
-			</div>
+            <legend>RegEx Details:</legend>
+            <div class="field">
+                <label>Name:</label>
+                {{ form.saveRegExName }} <a href="#" class="tooltip" title="Enter a name for your expression. E.g: 'Apache - IP;Size'">?</a>
+                {{ form.saveRegExName.errors }}
+            </div>
 
-			<div class="field">
+            <div class="field">
+                <label>Description:</label>
+                {{ form.saveRegExDescription }} <a href="#" class="tooltip" title="Enter a description for your expression.">?</a>
+                {{ form.saveRegExDescription.errors }}
+            </div>
 
-				{{ form.splitNodes.errors }}
-				<label>Split source and target nodes:</label>
-				{{ form.splitNodes }} <a href="#" class="tooltip" title="Split source and target as seperate nodes (otherwise same node with two edges).">?</a>
+            <br/>
+            <div class="smallText">
+                Enter a name and description for submitting your expression, so that other users can use your expression. Your description should be at least ten characters in length.
+            </div>
 
-			</div>
+        </fieldset>
+    </fieldset>
 
-			<div class="field">
+    <fieldset id="csv" class="hide">
 
-				{{ form.splitMode.errors }}
-				<label>Splitting:</label>
-				{{ form.splitMode }} <a href="#" class="tooltip" title="Splitting mode. See: http://afterglow.sourceforge.net/configuration.jpg for an example.">?</a>
+        {{ form.twoNodeMode.errors }}
+        <label>Two node mode:</label>
+        {{ form.twoNodeMode }} <a href="#" class="tooltip" title="When using data with two columns, this option should be checked.">?</a>
 
-			</div>
+    </fieldset>
 
-			<div class="field">
+    <fieldset>
+        <a href="#">
+            <legend data-toggle="collapse" data-target="#mainSettings">Main Settings</legend>
+        </a>
 
-				{{ form.overrideEdge.errors }}
-				{{ form.overrideEdgeLength.errors }}
-				<label>Override edge length:</label>
-				{{ form.overrideEdge }} &nbsp;&nbsp;&nbsp;&nbsp; 
-				{{form.overrideEdgeLength }} <a href="#" class="tooltip" title="Override default edge length">?</a>
-				<div class="cError"><span id="overrideEdgeE" class="cErrorMsg"></span></div>
-			</div>
 
-			<div class="field">
 
-				{{ form.textLabel.errors }}
-				<label>Text label colour:</label>
-				{{ form.textLabel }} <a href="#" class="tooltip" title="HEX colour for the text labels used on the graph.">?</a>
+        <fieldset id="mainSettings">
+            <label class="checkbox"  title="Check to print the number of instances of each node present.">
+                {{ form.printNodeCount.errors }}
+                {{ form.printNodeCount }}Print node count
+            </label>
 
-			</div>
-	   </div>
-	   
-	   <div id="advancedLabel"> Advanced Settings: </div>
 
-		<div id="advanced">
+            <label class="checkbox" title="Split source and target as seperate nodes (otherwise same node with two edges).">
 
-			<div class="field">
+                {{ form.splitNodes.errors }}
+                {{ form.splitNodes }}Split source and target nodes
+            </label>
 
-				{{ form.skipLines.errors }}
-				<label>Skip Lines:</label>
-				{{ form.skipLines }} <a href="#" class="tooltip" title="Skips the specified number of lines from the data-file (say for example, header data).">?</a>
-				<div class="cError"><span id="skipLinesE" class="cErrorMsg"></span></div>
+            <fieldset id="splittingModes" class="hide">
 
-			</div>
+                {{ form.splitMode.errors }}
+                <label>Splitting:</label>
+                {{ form.splitMode }} <a href="#" class="tooltip" title="Splitting mode. See: http://afterglow.sourceforge.net/configuration.jpg for an example.">?</a>
 
-			<div class="field">
+            </fieldset>
 
-				{{ form.maxLines.errors }}
-				<label>Maximum lines:</label>
-				{{ form.maxLines }} <a href="#" class="tooltip" title="Maximum number of lines to read from the data-file.">?</a>
-				<div class="cError"><span id="maxLinesE" class="cErrorMsg"></span></div>
+            <label class="checkbox" title="Override default edge length">
+                {{ form.overrideEdge.errors }}
 
-			</div>
+                {{ form.overrideEdge }}
+                Override default edge length
+            </label>
 
-			<div class="field">
+            <label class="checkbox" title="Override default edge length">
+                {{ form.overrideEdgeLength.errors }}
+                {{form.overrideEdgeLength }}
+            </label>
 
-				{{ form.omitThreshold.errors }}
-				<label>Omit threshold for each node:</label>
-				{{ form.omitThreshold }} <a href="#" class="tooltip" title="Omits nodes which occur less than the specified threshold.">?</a>
-				<div class="cError"><span id="omitThresholdE" class="cErrorMsg"></span></div>
+            <label class="input-medium"  title="HEX colour for the text labels used on the graph.">
 
-			</div>
+                {{ form.textLabel.errors }}
+                <label>Text label colour:</label>
+                {{ form.textLabel }}
 
-			<div class="field">
+            </label>
+        </fieldset>
+    </fieldset>
 
-				{{ form.sourceFanOut.errors }}
-				<label>Source fan out threshold:</label>
-				{{ form.sourceFanOut }} <a href="#" class="tooltip" title="Omits nodes which have a lesser number of edges originating from them, than the specified threshold.">?</a>
-				<div class="cError"><span id="sourceFanOutE" class="cErrorMsg"></span></div>
+    <fieldset>
+        <a href="#">
+            <legend data-toggle="collapse" data-target="#advancedSettings">Advanced Settings</legend>
+        </a>
+        <fieldset id="advancedSettings">
+            <label class="input-medium" title="Skips the specified number of lines from the data-file (say for example, header data).">
+                Skip lines
+                {{ form.skipLines.errors }}
+                {{ form.skipLines }}
+            </label>
 
-			</div>
+            <label class="input-medium" title="Maximum number of lines to read from the data-file.">
 
-			<div class="field" id="eventFanOutThres">
+                {{ form.maxLines.errors }}
+                Maximum lines
+                {{ form.maxLines }}
 
-				{{ form.eventFanOut.errors }}
-				<label>Event fan out threshold:</label>
-				{{ form.eventFanOut }} <a href="#" class="tooltip" title="Omits event nodes which have a lesser number of edges originating form them, than the specified threshold.">?</a>
-				<div class="cError"><span id="eventFanOutE" class="cErrorMsg"></span></div>
+            </label>
 
-			</div>
-	   </div>
+            <label class="input-medium" title="Omits nodes which occur less than the specified threshold.">
 
-		<div id="configLabel">Configuration: </div>
+                {{ form.omitThreshold.errors }}
+                Omit threshold for each node
+                {{ form.omitThreshold }}
 
-		<div id="config">
+            </label>
 
-			<div id="alreadyLabel"> Added configurations: </div>
+            <label class="input-medium" title="Omits nodes which have a lesser number of edges originating from them, than the specified threshold.">
 
-			<div id="alreadyAdded">
-				<br/><span id="configPlaceholder">No configurations added. Please use the options below to add any configurations.</span>
-				<div id="configHeaders">Type&nbsp;&nbsp;&nbsp; :: Node&nbsp;&nbsp; |&nbsp; [Conditions]</div>
-			</div>
+                {{ form.sourceFanOut.errors }}
+                Source fan out threshold
+                {{ form.sourceFanOut }}
 
-			<br/><br/>
+            </label>
 
-			<div id="alreadyAddedHidden"> </div>
+            <label class="input-medium" title="Omits event nodes which have a lesser number of edges originating form them, than the specified threshold.">
 
-			{{ form.propertyConfig }}
+                {{ form.eventFanOut.errors }}
+                Event fan out threshold
+                {{ form.eventFanOut }}
 
-			<br/><br/>
+            </label>
+        </fieldset>
+    </fieldset>
 
-			<div id="configType">
-				<span id="configTypeText">Config Type:</span>
-				<input type="radio" name="xConfigType" checked="checked" value="custom" class="configTypeRadio"/>Custom
-				<input type="radio" name="xConfigType" value="manual" class="configTypeRadio"/>Manual
-				{% if propertyConfigPopulate %}
-				
-					<input type="radio" name="xConfigType" value="prev" class="configTypeRadio"/>Last used configuration
-					
-				{% endif %}
-				<a href="#" class="tooltip configTypeRadio" title="Configuration type -- Manual lets you copy/paste the complete configuration file. Custom - choose each line. If you used AfterGlow before (recently) your last used configuration is also saved.">?</a>
-			</div>
+    <fieldset>
+    <a href="#">
+        <legend data-toggle="collapse" data-target="configuration">Configuration</legend>
+    </a>
+    <fieldset id="configuration">
 
-			<br/><br/>
 
-			<div id="manualConfig">
+    <div id="alreadyLabel"> Added configurations: </div>
 
-				<textarea rows="10" cols="50" name="xManualConfig" id="xManualConfig"></textarea>
-				<br/><br/>
-				{% if propertyConfigPopulate %}
-				
-					<span class="smallText">
+    <div id="alreadyAdded">
+        <br/><span id="configPlaceholder">No configurations added. Please use the options below to add any configurations.</span>
+        <div id="configHeaders">Type&nbsp;&nbsp;&nbsp; :: Node&nbsp;&nbsp; |&nbsp; [Conditions]</div>
+    </div>
+
+    <br/><br/>
+
+    <div id="alreadyAddedHidden"> </div>
+
+    {{ form.propertyConfig }}
+
+    <br/><br/>
+
+    <fieldset title="Configuration type -- Manual lets you copy/paste the complete configuration file. Custom - choose each line. If you used AfterGlow before (recently) your last used configuration is also saved.">
+        <label>Config Type</label>
+
+        <label class="radio inline">
+            <input type="radio" name="xConfigType" checked="checked" value="custom"/>Custom
+        </label>
+
+        <label class="radio inline">
+            <input type="radio" name="xConfigType" value="manual"/>Manual
+        </label>
+        {% if propertyConfigPopulate %}
+            <label class="radio inline">
+                <input type="radio" name="xConfigType" value="prev"/>Last used configuration
+            </label>
+
+        {% endif %}
+   </fieldset>
+
+    <br/><br/>
+
+    <fieldset id="manualConfig" class="hide">
+
+        <textarea rows="10" cols="50" name="xManualConfig" id="xManualConfig"></textarea>
+        <br/><br/>
+        {% if propertyConfigPopulate %}
+
+            <span class="smallText">
 						Your previously used configuration setting is saved. Importing it to edit will replace any configuration added above.
 					</span><br/><br/>
-					<a href="#" id="importLastUsedConfig">Import last used configuration</a> 
-					
-				{% endif %}
+            <a href="#" id="importLastUsedConfig">Import last used configuration</a>
 
-			</div>		
-			
-			<div id="lastUsedConfig">
-			
-				Your previously used configuration setting is saved. The following will be used: <br/>
-				<span class="smallText">(You can alternatively import this configuration and manually edit it under "Manual" mode)</span>
-				
-				<br/><br/>
-				
-				<textarea rows="15" cols="75" name="xPropertyConfigDummy" disabled="true">{{ propertyConfig }}</textarea>
-			
-			</div>
+        {% endif %}
 
-			<div id="customConfig">
+    </fieldset>
 
-				<fieldset id="fieldColour">
+    <fieldset id="lastUsedConfig" class="hide">
 
-					<legend>Add: Colour</legend>
-					
-					<a href="#" class="tooltip configTip" title="Specify a colour configuration for each node type with optional conditions. Adding an 'IF' condition wraps a perl 'if' expression around the condition, while a 'custom' condition can be any perl condition.">?</a>
-					
-					<div class="field">
-						<label>Node:</label>
-						<select name="xColourType" id="xColourType">
-							<option>Source</option>
-							<option>Event</option>
-							<option>Target</option>
-							<option>Edge</option>
-							<option>All Nodes</option>
-						</select>
-					</div>
-					
-					<div class="field">
-						<label>Colour:</label> <input type="text" name="xColourHEX" id="xColourHEX" />
-					</div>
-					
-					<div class="field"><label><u>Condition</u>:</label></div> <br/><br/>
-					
-					<input type="radio" name="xColourRadio" id="xColourRadioNone" checked="checked" value="none"/>None<br/>
-					
-					<div class="field">
-						<label><input type="radio" name="xColourRadio" id="xColourRadioIf" value="if"/>IF Condition:</label>
-						<input type="text" name="xColourIfCondition" id="xColourIfCondition" class="long"/>
-						<br/>
-						<label>&nbsp;</label>
-						<span class="smallText">e.g.: $fields[2] =~ /^192\.168/</span>
-					</div>
-					
-					<div class="field">
-						<label><input type="radio" name="xColourRadio" id="xColourRadioCustom" value="custom"/>Custom condition:</label>
-						<input type="text" name="xColourCustomCondition" id="xColourCustomCondition" class="long"/>
-					</div>
-					
-					<button name="xColourButton" id="xColourButton" class="addButton"></button>
-				</fieldset>
+        Your previously used configuration setting is saved. The following will be used: <br/>
+        <span class="smallText">(You can alternatively import this configuration and manually edit it under "Manual" mode)</span>
 
-				<fieldset id="fieldThreshold">
+        <br/><br/>
 
-					<legend>Add: Threshold Filter</legend>
-					
-					<a href="#" class="tooltip configTip" title="Specify an omit threshold for any/every type of node. Nodes below the threshold are ignored.">?</a>
+        <textarea rows="15" cols="75" name="xPropertyConfigDummy" disabled="true">{{ propertyConfig }}</textarea>
 
-					<div class="field">					
-						<label>Node:</label> 
-						<select name="xThresholdType" id="xThresholdType">
-							<option>Source</option>
-							<option>Event</option>
-							<option>Target</option>
-							<option>All</option>
-						</select>
-					</div>
-					
-					<div class="field">					
-						<label>Threshold:</label>
-					 	<input type="text" name="xThresholdSize" id="xThresholdSize" />
-					</div>
+    </fieldset>
 
-					<button name="xThresholdButton" id="xThresholdButton" class="addButton"></button>
-					<div class="cErrorConfig"><span id="thresholdE" class="cErrorMsg"></span></div>
-				</fieldset>
+    <fieldset id="customConfig" class="hide">
 
-				<div class="clear"></div>
-				<br/><br/>
+        <fieldset id="fieldColour">
 
-				<fieldset id="fieldSize">
+            <legend>Add Colour</legend>
 
-					<legend>Add: Node Sizes</legend>
-					
-					<a href="#" class="tooltip configTip" title="Specify settings for size of the nodes. This setting (for example) can be used to identify the frequency of a node using 'Number of occurences'; the size of each node will be proportionate to its frequency in the log.">?</a>
+            <a href="#" class="tooltip configTip" title="Specify a colour configuration for each node type with optional conditions. Adding an 'IF' condition wraps a perl 'if' expression around the condition, while a 'custom' condition can be any perl condition.">?</a>
 
-					<div class="field">					
-						<label>Node:</label>
-						<select name="xSizeType" id="xSizeType">
-							<option>Source</option>
-							<option>Event</option>
-							<option>Target</option>
-							<option>All</option>
-						</select>
-					</div>
+            <div class="field">
+                <label>Node:</label>
+                <select name="xColourType" id="xColourType">
+                    <option>Source</option>
+                    <option>Event</option>
+                    <option>Target</option>
+                    <option>Edge</option>
+                    <option>All Nodes</option>
+                </select>
+            </div>
 
-					<div class="field"><label><u>Condition</u>:</label></div> <br/><br/>
-					
-					<div class="field">
-						<label><input type="radio" name="xSizeRadio" id="xSizeRadioExp" checked="checked" value="exp"/>Expression:</label>
-						<input type="text" name="xSizeCondition" id="xSizeCondition" class="long"/>
-						<br/>
-						<label>&nbsp;</label>
-						<span class="smallText">e.g.: $fields[2]</span>
-					</div>
-					
-					<div class="field">
-						<label><input type="radio" name="xSizeRadio" id="xSizeRadioPre value="pre"/>Predefined:</label>
-						<select name="xSizePreType" id="xSizePreType">
-							<option value="num">Number of occurrences</option>
-							<option value="third">Third data column</option>
-							<option value="fourth">Fourth data column</option>
-						</select>
-					</div>
+            <div class="field">
+                <label>Colour:</label> <input type="text" name="xColourHEX" id="xColourHEX" />
+            </div>
 
-					<button name="xSizeButton" id="xSizeButton" class="addButton"></button>
-				</fieldset>
+            <div class="field"><label><u>Condition</u>:</label></div> <br/><br/>
 
-				<fieldset id="fieldGlobals">
+            <input type="radio" name="xColourRadio" id="xColourRadioNone" checked="checked" value="none"/>None<br/>
 
-					<legend>Add: Global settings</legend>
-					
-					<a href="#" class="tooltip configTip" title="Global settings for the configurations. These settings once applied will be disabled to input again, since they can be applied only once. The input becomes active again if the respective configuration is removed above.">?</a>
+            <div class="field">
+                <label><input type="radio" name="xColourRadio" id="xColourRadioIf" value="if"/>IF Condition:</label>
+                <input type="text" name="xColourIfCondition" id="xColourIfCondition" class="long"/>
+                <br/>
+                <label>&nbsp;</label>
+                <span class="smallText">e.g.: $fields[2] =~ /^192\.168/</span>
+            </div>
 
-					<div class="field">
-						<label>Max node size:</label>
-						<input type="text" name="xSizeMaxSize" id="xSizeMaxSize" />
-						<button name="xMaxNodeSizeButton" id="xMaxNodeSizeButton" class="addButtonSmall"></button>
-					</div>
-					
-					<div class="cErrorConfig"><span id="maxNodeSizeE" class="cErrorMsg"></span></div>
-					
-					<div class="field">
-						<label>Sum Nodes:</label>
-						<select name="xSumType" id="xSumType">
-							<option id="xSumOptionSource">Source</option>
-							<option id="xSumOptionEvent">Event</option>
-							<option id="xSumOptionTarget">Target</option>
-						</select>
-						<button name="xSumButton" id="xSumButton" class="addButtonSmall"></button>
-					</div>
+            <div class="field">
+                <label><input type="radio" name="xColourRadio" id="xColourRadioCustom" value="custom"/>Custom condition:</label>
+                <input type="text" name="xColourCustomCondition" id="xColourCustomCondition" class="long"/>
+            </div>
 
-					
-				</fieldset>
+            <button name="xColourButton" id="xColourButton" class="addButton"></button>
+        </fieldset>
 
-				<div class="clear"></div>
-				<br/><br/>
+        <fieldset id="fieldThreshold">
 
-				<fieldset id="fieldClustering">
+            <legend>Add: Threshold Filter</legend>
 
-					<legend>Add: Clustering</legend>
-					
-					<a href="#" class="tooltip configTip" title="Cluster a group of nodes accordingly to a property. For example: You can cluster all nodes of Class A IP as a single node/label or you can cluster all nodes with ports greater than 2000 as single node.">?</a>
+            <a href="#" class="tooltip configTip" title="Specify an omit threshold for any/every type of node. Nodes below the threshold are ignored.">?</a>
 
-					<div class="field">
-						<label>Node:</label>
-						<select name="xClusteringType" id="xClusteringType">
-							<option>Source</option>
-							<option>Event</option>
-							<option>Target</option>
-							<option>All</option>
-						</select>
-					</div>
-					
-					<div class="field"><label><u>Condition</u>:</label></div> <br/><br/>
-					
-					<div class="field">
-						<label><input type="radio" name="xClusteringRadio" id="xClusteringRadioIP" value="ip" checked="checked"/>IP Classes:</label>
-						<select name="xClusteringIPType" id="xClusteringIPType">
-							<option value="a">Class A</option>
-							<option value="b">Class B</option>
-							<option value="c">Class C</option>
-						</select>
-					</div>
-					
-					<div class="field">
-						<label><input type="radio" name="xClusteringRadio" id="xClusteringRadioPort" value="port" checked="checked"/>Port:</label>
-						<input type="text" name="xClusteringPort" id="xClusteringPort" value="2000" />
-						<br/>
-						<label>&nbsp;</label>
-						<span class="smallText">e.g.: 2000 -- would cluster all ports '> 2000'.</span>
-					</div>
-					
-					<div class="field">
-						<label><input type="radio" name="xClusteringRadio" id="xClusteringRadioExp" value="exp"/>Expression:</label>
-						<input type="text" name="xClusteringCondition" id="xClusteringCondition" class="long"/>
-						<br/>
-						<label>&nbsp;</label>
-						<span class="smallText">e.g.: regex_replace("(\\d\+)")."/8" if ($fields[0]!="192.168.0.1")</span>
-					</div>
-					
-					<button name="xClusteringButton" id="xClusteringButton" class="addButton"></button>
-				</fieldset>
+            <div class="field">
+                <label>Node:</label>
+                <select name="xThresholdType" id="xThresholdType">
+                    <option>Source</option>
+                    <option>Event</option>
+                    <option>Target</option>
+                    <option>All</option>
+                </select>
+            </div>
 
-				<fieldset id="fieldCustom">
+            <div class="field">
+                <label>Threshold:</label>
+                <input type="text" name="xThresholdSize" id="xThresholdSize" />
+            </div>
 
-					<legend>Add: Custom Line</legend>
-					
-					<a href="#" class="tooltip configTip" title="Add any custom line to the configuration page. The lines are parsed as-is.">?</a>
+            <button name="xThresholdButton" id="xThresholdButton" class="addButton"></button>
+            <div class="cErrorConfig"><span id="thresholdE" class="cErrorMsg"></span></div>
+        </fieldset>
 
-					<input type="text" name="xCustomCondition" id="xCustomCondition" class="long"/>
-					<br/>
-					<span class="smallText">e.g.: variable=@violation=("Backdoor Access");</span>
-					<br/><br/>
-					<button name="xCustomButton" id="xCustomButton" class="addButton"></button>
-				</fieldset>
+        <div class="clear"></div>
+        <br/><br/>
 
-				<div class="clear"></div>
-			</div>
-		</div>
+        <fieldset id="fieldSize">
 
-		<br/><br/>
-		
-		<div class="field">
-		
-			{{ form.renderingFilter.errors }}
-			<label>Rendering Engine:</label>
-			{{ form.renderingFilter }} <a href="#" class="tooltip" title="Choose a particular filter to use with GraphViz.">?</a>
-			
-		</div>
+            <legend>Add: Node Sizes</legend>
 
-		<div class="field">
+            <a href="#" class="tooltip configTip" title="Specify settings for size of the nodes. This setting (for example) can be used to identify the frequency of a node using 'Number of occurences'; the size of each node will be proportionate to its frequency in the log.">?</a>
 
-			<label>Save configuration:</label>
-			{{ form.saveConfigCookie }} <a href="#" class="tooltip" title="If checked the options chosen in the 'Settings' and 'Advanced settings' tabs are saved as a cookie and retained for four days. AfterGlow will remember your settings if you choose to render a graph again.">?</a>
+            <div class="field">
+                <label>Node:</label>
+                <select name="xSizeType" id="xSizeType">
+                    <option>Source</option>
+                    <option>Event</option>
+                    <option>Target</option>
+                    <option>All</option>
+                </select>
+            </div>
 
-		</div>
-		
-		<br/>
+            <div class="field"><label><u>Condition</u>:</label></div> <br/><br/>
 
-		<input type="submit" value="Render" id="xRenderProcess">
-	</form>
-	
-	<div id="xRegExDescriptions">{{ regExDescriptions }}</div>
-	
-	<textarea id="xPropertyConfigPopulate" name="xPropertyConfigPopulate" rows="2" cols="2">{{ propertyConfig }}</textarea>
-	
-	{% if afLogglySet %}
-		<script>afLogglySet = true;</script>
-	{% endif %}
+            <div class="field">
+                <label><input type="radio" name="xSizeRadio" id="xSizeRadioExp" checked="checked" value="exp"/>Expression:</label>
+                <input type="text" name="xSizeCondition" id="xSizeCondition" class="long"/>
+                <br/>
+                <label>&nbsp;</label>
+                <span class="smallText">e.g.: $fields[2]</span>
+            </div>
+
+            <div class="field">
+                <label><input type="radio" name="xSizeRadio" id="xSizeRadioPre value="pre"/>Predefined:</label>
+                <select name="xSizePreType" id="xSizePreType">
+                    <option value="num">Number of occurrences</option>
+                    <option value="third">Third data column</option>
+                    <option value="fourth">Fourth data column</option>
+                </select>
+            </div>
+
+            <button name="xSizeButton" id="xSizeButton" class="addButton"></button>
+        </fieldset>
+
+        <fieldset id="fieldGlobals">
+
+            <legend>Add: Global settings</legend>
+
+            <a href="#" class="tooltip configTip" title="Global settings for the configurations. These settings once applied will be disabled to input again, since they can be applied only once. The input becomes active again if the respective configuration is removed above.">?</a>
+
+            <div class="field">
+                <label>Max node size:</label>
+                <input type="text" name="xSizeMaxSize" id="xSizeMaxSize" />
+                <button name="xMaxNodeSizeButton" id="xMaxNodeSizeButton" class="addButtonSmall"></button>
+            </div>
+
+            <div class="cErrorConfig"><span id="maxNodeSizeE" class="cErrorMsg"></span></div>
+
+            <div class="field">
+                <label>Sum Nodes:</label>
+                <select name="xSumType" id="xSumType">
+                    <option id="xSumOptionSource">Source</option>
+                    <option id="xSumOptionEvent">Event</option>
+                    <option id="xSumOptionTarget">Target</option>
+                </select>
+                <button name="xSumButton" id="xSumButton" class="addButtonSmall"></button>
+            </div>
+
+
+        </fieldset>
+
+        <div class="clear"></div>
+        <br/><br/>
+
+        <fieldset id="fieldClustering">
+
+            <legend>Add: Clustering</legend>
+
+            <a href="#" class="tooltip configTip" title="Cluster a group of nodes accordingly to a property. For example: You can cluster all nodes of Class A IP as a single node/label or you can cluster all nodes with ports greater than 2000 as single node.">?</a>
+
+            <div class="field">
+                <label>Node:</label>
+                <select name="xClusteringType" id="xClusteringType">
+                    <option>Source</option>
+                    <option>Event</option>
+                    <option>Target</option>
+                    <option>All</option>
+                </select>
+            </div>
+
+            <div class="field"><label><u>Condition</u>:</label></div> <br/><br/>
+
+            <div class="field">
+                <label><input type="radio" name="xClusteringRadio" id="xClusteringRadioIP" value="ip" checked="checked"/>IP Classes:</label>
+                <select name="xClusteringIPType" id="xClusteringIPType">
+                    <option value="a">Class A</option>
+                    <option value="b">Class B</option>
+                    <option value="c">Class C</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label><input type="radio" name="xClusteringRadio" id="xClusteringRadioPort" value="port" checked="checked"/>Port:</label>
+                <input type="text" name="xClusteringPort" id="xClusteringPort" value="2000" />
+                <br/>
+                <label>&nbsp;</label>
+                <span class="smallText">e.g.: 2000 -- would cluster all ports '> 2000'.</span>
+            </div>
+
+            <div class="field">
+                <label><input type="radio" name="xClusteringRadio" id="xClusteringRadioExp" value="exp"/>Expression:</label>
+                <input type="text" name="xClusteringCondition" id="xClusteringCondition" class="long"/>
+                <br/>
+                <label>&nbsp;</label>
+                <span class="smallText">e.g.: regex_replace("(\\d\+)")."/8" if ($fields[0]!="192.168.0.1")</span>
+            </div>
+
+            <button name="xClusteringButton" id="xClusteringButton" class="addButton"></button>
+        </fieldset>
+
+        <fieldset id="fieldCustom">
+
+            <legend>Add: Custom Line</legend>
+
+            <a href="#" class="tooltip configTip" title="Add any custom line to the configuration page. The lines are parsed as-is.">?</a>
+
+            <input type="text" name="xCustomCondition" id="xCustomCondition" class="long"/>
+            <br/>
+            <span class="smallText">e.g.: variable=@violation=("Backdoor Access");</span>
+            <br/><br/>
+            <button name="xCustomButton" id="xCustomButton" class="addButton"></button>
+        </fieldset>
+
+
+    </fieldset>
+    </fieldset>
+
+    <br/><br/>
+
+    <label class="checkbox" title="If checked the options chosen in the 'Settings' and 'Advanced settings' tabs are saved as a cookie and retained for four days. AfterGlow will remember your settings if you choose to render a graph again.">
+        {{ form.saveConfigCookie }} Save configuration
+    </label>
+
+    <br/>
+
+    <input type="submit" value="Render" id="xRenderProcess" class="btn btn-primary">
+    </form>
+
+    <div id="xRegExDescriptions">{{ regExDescriptions }}</div>
+
+    <textarea id="xPropertyConfigPopulate" name="xPropertyConfigPopulate" rows="2" cols="2" class="hide">{{ propertyConfig }}</textarea>
+
+    {% if afLogglySet %}
+        <script>afLogglySet = true;</script>
+    {% endif %}
+
+    <script type="text/javascript">
+        $('fieldset').tooltip();
+        $('label').tooltip();
+        $('#mainSettings').collapse('hide');
+        $('#advancedSettings').collapse('hide');
+        $('#configuration').collapse('hide');
+    </script>
 
 {% endblock %}

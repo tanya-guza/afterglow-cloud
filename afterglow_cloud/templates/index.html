@@ -1,25 +1,42 @@
 {% extends "base.html" %}
 
 {% block title %}
-	AfterGlow Cloud
+    AfterGlow Cloud
 {% endblock %}
 
 {% block body %}
 
-	<div id="indexText">
-		AfterGlow Cloud is a security visualization tool which lets you upload data and visualize the data as graphs on-the-fly. You get to choose over the specifics, settings of the graph and generate them real time.
-		
-		<br/><br/><br/>
-	
-		<center>
-			<button type="button" onclick="location.href='process'">Render a Graph</button> 
-			<br/><br/>
-			<img src="{{ STATIC_URL }}images/afterglow_index.png" id="indexInfo" alt="AfterGlow"/>
-		</center>
-		
-		<br/>
-		AfterGlow Cloud is an <a href="https://github.com/ayrus/afterglow-cloud">open-source</a> project and is based on its command line predecessor <a href="http://afterglow.sourceforge.net/">AfterGlow</a>.
-	
-	</div>
+    <div class="welcome">
+        <img src="{{ STATIC_URL }}images/afterglow_index.png" id="indexInfo" alt="AfterGlow"/>
+        <p class="lead">
+            AfterGlow Cloud is a security visualization tool which lets you upload data and visualize the data as
+            graphs on-the-fly. You get to choose over the specifics, settings of the graph and generate them real time.
+        </p>
+        <a class="btn btn-large btn-success" href="process">Render a graph</a>
+    </div>
+
+
+    <div class="row-fluid">
+        <div class="span4">
+            <h2>Open-source</h2>
+            <p>
+                AfterGlow Cloud is an <a href="https://github.com/ayrus/afterglow-cloud">open-source</a>
+                project and is based on its command line predecessor <a href="http://afterglow.sourceforge.net/">AfterGlow</a>
+            </p>
+        </div>
+        <div class="span4">
+            <h2>Different input formats</h2>
+            <p>
+                AfterGlow Cloud allows visualizing and analyzing data from different sources - CSV, raw log files and Loggly logging
+                service.
+            </p>
+        </div>
+        <div class="span4">
+            <h2>Interactive</h2>
+            <p>You can analyze and manipulate the data in the real-time by using simple but yet powerful interactive tools</p>
+        </div>
+    </div>
+
+    <hr>
 
 {% endblock %}
