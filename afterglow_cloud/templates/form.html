@@ -217,7 +217,7 @@
 
     <fieldset>
     <a href="#">
-        <legend data-toggle="collapse" data-target="configuration">Configuration</legend>
+        <legend data-toggle="collapse" data-target="#configuration">Configuration</legend>
     </a>
     <fieldset id="configuration">
 
@@ -241,15 +241,15 @@
         <label>Config Type</label>
 
         <label class="radio inline">
-            <input type="radio" name="xConfigType" checked="checked" value="custom"/>Custom
+            <input type="radio" name="xConfigType" checked="checked" value="custom" data-toggle="visibility" data-target="#customConfig"/>Custom
         </label>
 
         <label class="radio inline">
-            <input type="radio" name="xConfigType" value="manual"/>Manual
+            <input type="radio" name="xConfigType" value="manual"  data-toggle="visibility" data-target="#manualConfig"/>Manual
         </label>
         {% if propertyConfigPopulate %}
             <label class="radio inline">
-                <input type="radio" name="xConfigType" value="prev"/>Last used configuration
+                <input type="radio" name="xConfigType" value="prev"  data-toggle="visibility" data-target="#lastUsedConfig"/>Last used configuration
             </label>
 
         {% endif %}
@@ -259,7 +259,7 @@
 
     <fieldset id="manualConfig" class="hide">
 
-        <textarea rows="10" cols="50" name="xManualConfig" id="xManualConfig"></textarea>
+        <textarea rows="10" cols="50" name="xManualConfig" id="xManualConfig" ></textarea>
         <br/><br/>
         {% if propertyConfigPopulate %}
 
@@ -283,7 +283,7 @@
 
     </fieldset>
 
-    <fieldset id="customConfig" class="hide">
+    <fieldset id="customConfig">
 
         <fieldset id="fieldColour">
 
@@ -323,7 +323,7 @@
                 <input type="text" name="xColourCustomCondition" id="xColourCustomCondition" class="long"/>
             </div>
 
-            <button name="xColourButton" id="xColourButton" class="addButton"></button>
+            <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add color rule</a>
         </fieldset>
 
         <fieldset id="fieldThreshold">
@@ -347,7 +347,7 @@
                 <input type="text" name="xThresholdSize" id="xThresholdSize" />
             </div>
 
-            <button name="xThresholdButton" id="xThresholdButton" class="addButton"></button>
+            <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add omit threshold rule</a>
             <div class="cErrorConfig"><span id="thresholdE" class="cErrorMsg"></span></div>
         </fieldset>
 
@@ -381,15 +381,16 @@
             </div>
 
             <div class="field">
-                <label><input type="radio" name="xSizeRadio" id="xSizeRadioPre value="pre"/>Predefined:</label>
+                <label><input type="radio" name="xSizeRadio" id="xSizeRadioPre value="pre"/>Predefined:
                 <select name="xSizePreType" id="xSizePreType">
                     <option value="num">Number of occurrences</option>
                     <option value="third">Third data column</option>
                     <option value="fourth">Fourth data column</option>
                 </select>
+               </label>
             </div>
 
-            <button name="xSizeButton" id="xSizeButton" class="addButton"></button>
+           <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add size rule</a>
         </fieldset>
 
         <fieldset id="fieldGlobals">
@@ -401,7 +402,7 @@
             <div class="field">
                 <label>Max node size:</label>
                 <input type="text" name="xSizeMaxSize" id="xSizeMaxSize" />
-                <button name="xMaxNodeSizeButton" id="xMaxNodeSizeButton" class="addButtonSmall"></button>
+                <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add max node size</a>
             </div>
 
             <div class="cErrorConfig"><span id="maxNodeSizeE" class="cErrorMsg"></span></div>
@@ -413,7 +414,7 @@
                     <option id="xSumOptionEvent">Event</option>
                     <option id="xSumOptionTarget">Target</option>
                 </select>
-                <button name="xSumButton" id="xSumButton" class="addButtonSmall"></button>
+                <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add node summing rule</a>
             </div>
 
 
@@ -465,7 +466,7 @@
                 <span class="smallText">e.g.: regex_replace("(\\d\+)")."/8" if ($fields[0]!="192.168.0.1")</span>
             </div>
 
-            <button name="xClusteringButton" id="xClusteringButton" class="addButton"></button>
+            <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add node clustering rule</a>
         </fieldset>
 
         <fieldset id="fieldCustom">
@@ -478,7 +479,7 @@
             <br/>
             <span class="smallText">e.g.: variable=@violation=("Backdoor Access");</span>
             <br/><br/>
-            <button name="xCustomButton" id="xCustomButton" class="addButton"></button>
+            <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add custom config line</a>
         </fieldset>
 
 

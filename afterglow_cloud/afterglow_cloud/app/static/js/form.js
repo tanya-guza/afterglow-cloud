@@ -17,8 +17,7 @@ $(document).ready(function(){
     $('#id_textLabel').miniColors();
     $('#xColourHEX').miniColors();
 	
-    // Invoke the tool-tips.
-    $(".tooltip").tipTip({maxWidth: "250px"});
+
 
     // Show the override box input (which is hidden otherwise) if the cookie
     // data from the view has the 'override-edge' box checked.
@@ -26,26 +25,11 @@ $(document).ready(function(){
 	    toggleShowOverrideInput();
     }
 
-    // Reset the checkboxes.
-    $('input[name=xLogType]')[0].checked = true;
-    $('input[name=regExType]')[0].checked = true;
-    $('input[name=xConfigType]')[0].checked = true;
 
     $("#id_overrideEdge").click(function () { 
         toggleShowOverrideInput();
     });
     
-    $("#settingsLabel").click(function () { 
-        toggleShowMainSettings();
-    });
-    
-    $('#advancedLabel').click(function () {
-        toggleShowAdvanced();
-    });
-    
-    $('#configLabel').click(function () {
-        toggleShowConfig();
-    });
     
     // Following are event handlers for different buttons in the configurations'
     // fieldsets.
