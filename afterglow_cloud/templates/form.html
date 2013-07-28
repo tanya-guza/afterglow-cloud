@@ -25,16 +25,16 @@
               title="Select the source of your data. Choose CSV to upload an already parsed log; Choose 'Lof File' to upload a generated log and then use a RegEx to parse it automatically to a CSV file for AfterGlow or use an account you have with Loggly.com to bring in your logs to AfterGlow.">
         <legend>Input source</legend>
         <label class="radio inline">
-            <input type="radio" name="xLogType" checked="checked" value="data"/>
+            <input type="radio" name="xLogType" checked="checked" value="data" data-toggle="visibility" data-target="#file"/>
             CSV Data
         </label>
 
         <label class="radio inline">
-            <input type="radio" name="xLogType" value="log" class="configTypeRadio"/>Log File
+            <input type="radio" name="xLogType" value="log" class="configTypeRadio"  data-toggle="visibility" data-target="#file"/>Log File
         </label>
 
         <label class="radio inline">
-            <input type="radio" name="xLogType" value="loggly" class="configTypeRadio"/>Loggly
+            <input type="radio" name="xLogType" value="loggly" class="configTypeRadio" value="data" data-toggle="visibility" data-target="#loggly"/>Loggly
         </label>
     </fieldset>
 
@@ -60,7 +60,7 @@
 
     </fieldset>
     <br>
-    <fieldset id="file" class="hide">
+    <fieldset id="file">
 
         {{ form.dataFile.errors }}
         <label>File
@@ -510,6 +510,21 @@
         $('#mainSettings').collapse('hide');
         $('#advancedSettings').collapse('hide');
         $('#configuration').collapse('hide');
+
+
+        toggleVisibility = function(component){
+
+             $('input:radio[data-toggle="visibility"]').each(function(){
+                var target = $(this).data("target");
+                 $(target).hide();
+             });
+
+
+             var target = $(this).data("target");
+             $(target).show();
+        };
+
+       $('input:radio[data-toggle="visibility"]').change(toggleVisibility);
     </script>
 
 {% endblock %}
