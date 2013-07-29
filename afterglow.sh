@@ -7,8 +7,8 @@
 #
 # Usage:
 # 	afterglow.sh "path_to_csv_file" "path_to_colour_property_file" 
-#				"path_to_resulting_output_file" 
-#				"path_to_afterglow.pl" "filter name" "arguments"
+#				"path_to_resulting_json_output_file" 
+#				"path_to_afterglow.pl"  "arguments"
 #
 # Note: Paths can be absolute or relative.
 # 		For a list of 'arguments' please see [1].
@@ -45,9 +45,6 @@ outputFile="$1"
 afPath="$1"
 	shift
 	
-#Filter to be used with GraphViz
-filter="$1"
-	shift
 
 #Additional parameters (if any) to be passed to AfterGlow.
 args="$@"
@@ -107,7 +104,6 @@ args="$@"
 
 #Everything looks good for now; render the graph.
 perl "$afPath" -i "$dataFile" -c "$propertyFile" $args -j > "$outputFile"
-perl "$afPath" -i "$dataFile" -c "$propertyFile" $args | "$filter" -Tgif -o "$outputFile.gif"
 
 #Check if the output was successfuly rendered and that the output file is
 #more than 0 bytes in size.

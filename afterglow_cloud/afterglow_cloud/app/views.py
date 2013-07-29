@@ -295,8 +295,7 @@ def _render(request, parsedData, loggly=False, logglyData=None):
 
         #Try rendering a graph, store the return code from the shell script.
 
-        status = _renderGraph(dataFile, propertyFile, outputFile, afPath,
-                              POSTdata['renderingFilter'], param)
+        status = _renderGraph(dataFile, propertyFile, outputFile, afPath, param)
 
         CAPTCHA_PUBLIC_KEY = settings.AF_RECAPTCHA_PUBLIC_KEY
 
@@ -609,7 +608,7 @@ def _readCookie(cookie):
     return formData
 
 
-def _renderGraph(dataFile, propertyFile, outputFile, afPath, rFilter, afArgs):
+def _renderGraph(dataFile, propertyFile, outputFile, afPath, afArgs):
     '''
     Call the shell script invoking AfterGlow with the required parameters
     to render a graph. Return the exit status returned by the shell script.
@@ -634,13 +633,11 @@ def _renderGraph(dataFile, propertyFile, outputFile, afPath, rFilter, afArgs):
 
     afPath = os.path.join(settings.PROJECT_PATH, '../' + afPath)
 
-    filters = {'1': 'neato', '2': 'dot', '3': 'sfdp'}
-
     if (get_number_of_columns(dataFile) == 2) and (not "-t" in afArgs):
         afArgs += "-t "
 
     return call(os.path.join(settings.PROJECT_PATH, "../../afterglow.sh") + " " + dataFile + " " + propertyFile + " " +
-                outputFile + " " + afPath + " " + filters[rFilter] + " " + afArgs, shell=True)
+                outputFile + " " + afPath + " " + afArgs, shell=True)
 
 
 def _logglyAuth(request):
