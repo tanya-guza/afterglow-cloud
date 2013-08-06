@@ -1,6 +1,6 @@
 var afterglow = {};
 var RecaptchaOptions = {
-    theme : 'white'
+    theme: 'white'
 };
 
 /**
@@ -31,13 +31,13 @@ d3.graphson.facade = function (graphsonEdges, graphsonVertices) {
         graphsonEdge.target = indexMap[graphsonEdge._in];
     }
 
-    return {"vertices" : graphsonVertices, "edges" : graphsonEdges};
+    return {"vertices": graphsonVertices, "edges": graphsonEdges};
 };
 
-function render(heliosPath, graphsonPath, svgId){
+function render(heliosPath, graphsonPath, svgId) {
 
-    var g = new Helios.GraphDatabase({'heliosDBPath' : heliosPath,
-        'vertices' : {}, 'edges' : {}, 'v_idx' : {}, 'e_idx' : {}});
+    var g = new Helios.GraphDatabase({'heliosDBPath': heliosPath,
+        'vertices': {}, 'edges': {}, 'v_idx': {}, 'e_idx': {}});
 
 
     g.loadGraphSON(graphsonPath);
@@ -47,32 +47,33 @@ function render(heliosPath, graphsonPath, svgId){
         .attr('width', width)
         .attr('height', height);
 
-     var grp = svg.append('g')
-     .attr('id', 'viewport');
-
+    var grp = svg.append('g')
+        .attr('id', 'viewport');
 
 
     g.E().then(); // Don't know why, but without first call it will be always empty
-
-    g.E().then(function(edges){
-        g.V().then(function(vertices){
-            var graph = d3.graphson.facade(edges, vertices);
-            console.log(graph);
-            force
-                .nodes(graph.vertices)
-                .links(graph.edges)
-                .gravity(.05)
-                .distance(100)
-                .charge(-100)
-                .size([width, height])
-                .start();
+    var graphStats = afterglow.metrics(g, function (stats) {
 
 
-            var link = grp.selectAll(".link")
-                .data(graph.edges)
-                .enter().append("line")
-                .attr("style", "stroke:rgb(255,0,0);stroke-width:2")
-                .attr("class", "link");
+        g.E().then(function (edges) {
+            g.V().then(function (vertices) {
+                var graph = d3.graphson.facade(edges, vertices);
+                console.log(graph);
+                force
+                    .nodes(graph.vertices)
+                    .links(graph.edges)
+                    .gravity(.05)
+                    .distance(100)
+                    .charge(-100)
+                    .size([width, height])
+                    .start();
+
+
+                var link = grp.selectAll(".link")
+                    .data(graph.edges)
+                    .enter().append("line")
+                    .attr("style", "stroke:rgb(255,0,0);stroke-width:2")
+                    .attr("class", "link");
 
 //            var node = svg.selectAll(".node")
 //                .data(graph.vertices)
@@ -81,67 +82,84 @@ function render(heliosPath, graphsonPath, svgId){
 //                .attr("r", function(d){return 3 + Math.random()*10;})
 //                .call(force.drag);
 
-            var node = grp.selectAll(".node")
-                .data(graph.vertices)
-                .enter().append("g")
-                .attr("class", "node")
-                // .attr("r", function(d){return 3 + Math.random()*10;})
-                .call(force.drag);
+                var node = grp.selectAll(".node")
+                    .data(graph.vertices)
+                    .enter().append("g")
+                    .attr("class", "node")
+                    // .attr("r", function(d){return 3 + Math.random()*10;})
+                    .call(force.drag);
 
 
-              node.append("text")
-                  .attr("dx", 12)
-                  .attr("dy", ".35em")
-                  .text(function(d) { return d._label; });
+                node.append("text")
+                    .attr("dx", 12)
+                    .attr("dy", ".35em")
+                    .text(function (d) {
+                        return d._label;
+                    });
 
 
-            node.append("circle")
-                .attr("class", "node")
-               .attr("r", function(d){return 3 + Math.random()*10;});
+                node.append("circle")
+                    .attr("class", "node")
+                    .attr("r", function (d) {
+                        console.log(d._id);
+                        return 3 + stats[d._id].totalConnectivity * 0.3;
+                    });
 //                .call(force.drag);
 
 
+                force.on("tick", function () {
+                    link.attr("x1", function (d) {
+                        return d.source.x;
+                    })
+                        .attr("y1", function (d) {
+                            return d.source.y;
+                        })
+                        .attr("x2", function (d) {
+                            return d.target.x;
+                        })
+                        .attr("y2", function (d) {
+                            return d.target.y;
+                        });
 
-            force.on("tick", function() {
-                link.attr("x1", function(d) { return d.source.x; })
-                    .attr("y1", function(d) { return d.source.y; })
-                    .attr("x2", function(d) { return d.target.x; })
-                    .attr("y2", function(d) { return d.target.y; });
+                    node.attr("cx", function (d) {
+                        return d.x;
+                    })
+                        .attr("cy", function (d) {
+                            return d.y;
+                        });
 
-                node.attr("cx", function(d) { return d.x; })
-                    .attr("cy", function(d) { return d.y; });
-
-                node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+                    node.attr("transform", function (d) {
+                        return "translate(" + d.x + "," + d.y + ")";
+                    });
+                });
             });
         });
+
+
+        var color = d3.scale.category20();
+
+        var force = d3.layout.force()
+            .charge(-120)
+            .linkDistance(30)
+            .size([width, height]);
+
+        console.log(stats);
     });
+}
 
 
-
-
-    var color = d3.scale.category20();
-
-    var force = d3.layout.force()
-        .charge(-120)
-        .linkDistance(30)
-        .size([width, height]);
-
-    return g;
-};
-
-
-$(function(){
+$(function () {
     $('#renderViewport').svgPan('viewport');
 
-    $("#zoomin").click(function(){
+    $("#zoomin").click(function () {
         return false;
     });
 
-    $("#zoomout").click(function(){
+    $("#zoomout").click(function () {
         return false;
     });
 
-    $("#reset").click(function(){
+    $("#reset").click(function () {
         return false;
     });
 });
