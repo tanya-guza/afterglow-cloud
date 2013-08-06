@@ -1,3 +1,4 @@
+var afterglow = {};
 var RecaptchaOptions = {
     theme : 'white'
 };
@@ -124,6 +125,8 @@ function render(heliosPath, graphsonPath, svgId){
         .charge(-120)
         .linkDistance(30)
         .size([width, height]);
+
+    return g;
 };
 
 

@@ -12,7 +12,9 @@
     <script src="{{ STATIC_URL }}js/d3.v3.js" ></script>
     <script src="{{ STATIC_URL }}js/jquery-svgpan.js" ></script>
     <script src="{{ STATIC_URL }}js/render.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}js/metrics.js" type="text/javascript"></script>
 {% endblock %}
+
 
 {% block body %}
 
@@ -198,9 +200,15 @@
 
 
             <script type="text/javascript">
-                render('{{ STATIC_URL }}js/helios/lib/heliosDB.js',
+                var g = render('{{ STATIC_URL }}js/helios/lib/heliosDB.js',
                         '{{ STATIC_URL }}rendered/{{ requestID }}.json',
                         '#renderViewport');
+
+                console.log("graph");
+                afterglow.metrics.betweenness(g, function(stats){
+                    console.log(stats);
+                });
+
             </script>
         </div>
     </div>
