@@ -46,6 +46,10 @@ function render(heliosPath, graphsonPath, svgId){
         .attr('width', width)
         .attr('height', height);
 
+     var grp = svg.append('g')
+     .attr('id', 'viewport');
+
+
 
     g.E().then(); // Don't know why, but without first call it will be always empty
 
@@ -56,29 +60,46 @@ function render(heliosPath, graphsonPath, svgId){
             force
                 .nodes(graph.vertices)
                 .links(graph.edges)
+                .gravity(.05)
+                .distance(100)
+                .charge(-100)
+                .size([width, height])
                 .start();
 
 
-            var link = svg.selectAll(".link")
+            var link = grp.selectAll(".link")
                 .data(graph.edges)
                 .enter().append("line")
                 .attr("style", "stroke:rgb(255,0,0);stroke-width:2")
                 .attr("class", "link");
 
-            var node = svg.selectAll(".node")
+//            var node = svg.selectAll(".node")
+//                .data(graph.vertices)
+//                .enter().append("circle")
+//                .attr("class", "node")
+//                .attr("r", function(d){return 3 + Math.random()*10;})
+//                .call(force.drag);
+
+            var node = grp.selectAll(".node")
                 .data(graph.vertices)
-                .enter().append("circle")
+                .enter().append("g")
                 .attr("class", "node")
-                .attr("r", 5)
+                // .attr("r", function(d){return 3 + Math.random()*10;})
                 .call(force.drag);
 
-            node.append("title")
-                .text(function(d) { return d._label; });
 
-            node.append("text")
-                .attr("dx", 12)
-                .attr("dy", ".35em")
-                .text(function(d) { return d._label; });
+              node.append("text")
+                  .attr("dx", 12)
+                  .attr("dy", ".35em")
+                  .text(function(d) { return d._label; });
+
+
+            node.append("circle")
+                .attr("class", "node")
+               .attr("r", function(d){return 3 + Math.random()*10;});
+//                .call(force.drag);
+
+
 
             force.on("tick", function() {
                 link.attr("x1", function(d) { return d.source.x; })
@@ -88,6 +109,8 @@ function render(heliosPath, graphsonPath, svgId){
 
                 node.attr("cx", function(d) { return d.x; })
                     .attr("cy", function(d) { return d.y; });
+
+                node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
             });
         });
     });
@@ -102,3 +125,20 @@ function render(heliosPath, graphsonPath, svgId){
         .linkDistance(30)
         .size([width, height]);
 };
+
+
+$(function(){
+    $('#renderViewport').svgPan('viewport');
+
+    $("#zoomin").click(function(){
+        return false;
+    });
+
+    $("#zoomout").click(function(){
+        return false;
+    });
+
+    $("#reset").click(function(){
+        return false;
+    });
+});
