@@ -36,15 +36,19 @@
                 </fieldset>
                 <hr>
                 <fieldset>
-                    <label>Node size settings</label>
-                    <label class="checkbox inline">
-                        <input type="checkbox" id="calculateBetweenness" name="calculateBetweenness" />
-                        Calculate betweenness centrality
+                    <label>Node size</label>
+                     <label class="radio inline">
+                        <input type="radio" id="nodeSizeNone" name="nodeSizeSource" value="0" />
+                        All nodes have the same size
+                    </label>
+                    <label class="radio inline">
+                        <input type="radio" id="nodeSizeBetweenness" name="nodeSizeSource" value="1" />
+                        Betweenness centrality
                     </label>
                     <br>
-                    <label class="checkbox inline">
-                        <input type="checkbox" id="considerNodeSize" name="considerNodeSize" checked/>
-                        Consider size attribute
+                    <label class="radio inline">
+                        <input type="radio" id="nodeSizeAverageConnectivity" name="nodeSizeSource" value="2" checked/>
+                        Average connectivity
                     </label>
                 </fieldset>
                 <hr>

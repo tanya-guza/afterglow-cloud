@@ -75,18 +75,10 @@ function render(heliosPath, graphsonPath, svgId) {
                     .attr("style", "stroke:rgb(255,0,0);stroke-width:2")
                     .attr("class", "link");
 
-//            var node = svg.selectAll(".node")
-//                .data(graph.vertices)
-//                .enter().append("circle")
-//                .attr("class", "node")
-//                .attr("r", function(d){return 3 + Math.random()*10;})
-//                .call(force.drag);
-
                 var node = grp.selectAll(".node")
                     .data(graph.vertices)
                     .enter().append("g")
                     .attr("class", "node")
-                    // .attr("r", function(d){return 3 + Math.random()*10;})
                     .call(force.drag);
 
 
