@@ -3,5 +3,5 @@
 afterglow_cloud/afterglow_cloud/settings.py
 *.db
 afterglow_cloud/afterglow_cloud/app/static/rendered
-afterglow_cloud/user_*
+afterglow_cloud/user_content/user_*
 *.*~

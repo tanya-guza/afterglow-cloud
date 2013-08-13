@@ -285,12 +285,12 @@ def _render(request, parsedData, loggly=False, logglyData=None):
         param = _buildParameters(POSTdata)
 
         if parsedData:
-            dataFile = "user_logs_parsed/" + requestID + ".log"
+            dataFile = "user_content/user_logs_parsed/" + requestID + ".log"
         else:
-            dataFile = "user_data/" + requestID + ".csv"
+            dataFile = "user_content/user_data/" + requestID + ".csv"
 
-        propertyFile = "user_config/" + requestID + ".property"
-        outputFile = "afterglow_cloud/app/static/rendered/" + requestID + ".json"
+        propertyFile = "user_content/user_config/" + requestID + ".property"
+        outputFile = "app/static/rendered/" + requestID + ".json"
         afPath = "../afterglow/afterglow.pl"
 
         #Try rendering a graph, store the return code from the shell script.
@@ -341,7 +341,7 @@ def _parseToCsv(f, requestID, POSTdata, loggly=False):
 
     fileName = requestID + '.log'
 
-    with open(os.path.join(settings.PROJECT_PATH, '../user_logs/') + fileName, 'wb+') as dest:
+    with open(os.path.join(settings.PROJECT_PATH, 'user_content/user_logs/') + fileName, 'wb+') as dest:
 
         # If the data 'f' is from Loggly write it line by line or use the data
         # as a stream (uploaded log file from the user).
@@ -370,10 +370,10 @@ def _parseToCsv(f, requestID, POSTdata, loggly=False):
     # file.
     first_line = True
     string = ''
-    with open(os.path.join(settings.PROJECT_PATH, '../user_logs_parsed/') + fileName, 'wb+') as dest:
+    with open(os.path.join(settings.PROJECT_PATH, 'user_content/user_logs_parsed/') + fileName, 'wb+') as dest:
 
 
-        for line in open(os.path.join(settings.PROJECT_PATH, '../user_logs/') + fileName):
+        for line in open(os.path.join(settings.PROJECT_PATH, 'user_content/user_logs/') + fileName):
             if first_line:
                 first_line = False
             else:
@@ -428,12 +428,17 @@ def _cleanFiles():
     '''
 
     # List of relatives paths to be pruned for older files.
-    paths = ["afterglow_cloud/app/static/rendered/", "user_data/", \
-             "user_config/", "user_logs/", "user_logs_parsed/"]
+    user_content_paths = ["app/static/rendered/", "user_content/user_data/", \
+                          'user_content/user_config/', "user_content/user_logs/", "user_content/user_logs_parsed/"]
+
+    _removeUsingPaths(user_content_paths)
+
+
+def _removeUsingPaths(paths):
 
     for path in paths:
 
-        absPath = os.path.join(settings.PROJECT_PATH, '../' + path)
+        absPath = os.path.join(settings.PROJECT_PATH, './' + path)
         files = os.listdir(absPath)
 
         for oldFile in files:
@@ -461,7 +466,7 @@ def _writeDataFile(f, requestID):
 
     fileName = requestID + '.csv'
 
-    with open(os.path.join(settings.PROJECT_PATH, '../user_data/') + fileName, 'wb+') as dest:
+    with open(os.path.join(settings.PROJECT_PATH, 'user_content/user_data/') + fileName, 'wb+') as dest:
         for chunk in f.chunks():
             dest.write(chunk)
 
@@ -481,7 +486,7 @@ def _writeConfigFile(data, requestID):
 
     fileName = requestID + '.property'
 
-    with open(os.path.join(settings.PROJECT_PATH, '../user_config/') + fileName, 'wb') as dest:
+    with open(os.path.join(settings.PROJECT_PATH, 'user_content/user_config/') + fileName, 'wb') as dest:
         dest.write(data)
 
 
@@ -625,11 +630,11 @@ def _renderGraph(dataFile, propertyFile, outputFile, afPath, afArgs):
     Exit code from the afterglow shell script.    
     '''
 
-    dataFile = os.path.join(settings.PROJECT_PATH, '../' + dataFile)
+    dataFile = os.path.join(settings.PROJECT_PATH, dataFile)
 
-    propertyFile = os.path.join(settings.PROJECT_PATH, '../' + propertyFile)
+    propertyFile = os.path.join(settings.PROJECT_PATH, propertyFile)
 
-    outputFile = os.path.join(settings.PROJECT_PATH, '../' + outputFile)
+    outputFile = os.path.join(settings.PROJECT_PATH,  outputFile)
 
     afPath = os.path.join(settings.PROJECT_PATH, '../' + afPath)
 
