@@ -59,6 +59,8 @@ function render(heliosPath, graphsonPath, svgId) {
             g.V().then(function (vertices) {
                 var graph = d3.graphson.facade(edges, vertices);
                 console.log(graph);
+                console.log(edges);
+                console.log(vertices);
                 force
                     .nodes(graph.vertices)
                     .links(graph.edges)
