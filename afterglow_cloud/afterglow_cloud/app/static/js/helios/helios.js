@@ -73,7 +73,7 @@ var Helios;
                 console.log(message);
             }).end();
         };
-        GraphDatabase.prototype.loadGraphSON = function (jsonData) {
+        GraphDatabase.prototype.loadGraphSON = function (jsonData, callback) {
             this.db.invoke("dbCommand", [
                 {
                     method: 'loadGraphSON',
@@ -83,6 +83,7 @@ var Helios;
                 }
             ]).then(function (message) {
                 console.log(message);
+                callback();
             }).end();
         };
         GraphDatabase.prototype.loadGraphML = function (xmlData) {

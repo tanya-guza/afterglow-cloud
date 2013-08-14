@@ -130,18 +130,17 @@ afterglow.rendering = {
         var g = new Helios.GraphDatabase({'heliosDBPath': heliosPath,
             'vertices': {}, 'edges': {}, 'v_idx': {}, 'e_idx': {}});
 
-        g.loadGraphSON(graphsonPath);
-
-        var graphStats = afterglow.metrics.nodes(g, function (node_stats) {
-            g.E().then(function (edges) {
-                g.V().then(function (vertices) {
-                    afterglow.rendering.render(edges, vertices, node_stats, svgId);
-                    $(svgId).svgPan('viewport');
+        g.loadGraphSON(graphsonPath, function () {
+            var graphStats = afterglow.metrics.nodes(g, function (node_stats) {
+                g.E().then(function (edges) {
+                    g.V().then(function (vertices) {
+                        afterglow.rendering.render(edges, vertices, node_stats, svgId);
+                        $(svgId).svgPan('viewport');
+                    });
                 });
+
             });
-
         });
-
 
 
     }
