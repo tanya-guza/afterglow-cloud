@@ -252,8 +252,10 @@ var Helios;
             }
             if(Utils.isString(jsonData)) {
                 xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange = function () {
-                    if(xmlhttp.readyState === 4) {
+                xmlhttp.open("GET", jsonData, false);
+                xmlhttp.send(null);
+
+                  if(xmlhttp.readyState === 4) {
                         jsonData = JSON.parse(xmlhttp.responseText);
                         if(!!jsonData.graph) {
                             jsonData = jsonData.graph;
@@ -264,10 +266,9 @@ var Helios;
                         if(jsonData.edges) {
                             graph.loadEdges(jsonData.edges);
                         }
-                    }
-                };
-                xmlhttp.open("GET", jsonData, true);
-                xmlhttp.send(null);
+                  }
+
+
             }
             return "Data Loaded";
         };
