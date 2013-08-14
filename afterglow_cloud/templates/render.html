@@ -204,7 +204,7 @@
 
 
             <script type="text/javascript">
-                var g = render('{{ STATIC_URL }}js/helios/lib/heliosDB.js',
+                var g = afterglow.rendering.init('{{ STATIC_URL }}js/helios/lib/heliosDB.js',
                         '{{ STATIC_URL }}rendered/{{ requestID }}.json',
                         '#renderViewport');
 
