@@ -148,13 +148,19 @@ afterglow.rendering = {
                         $('#panAndZoom').change(function(){
                                 var panZoom = $(this).is(':checked');
                                 if (panZoom){
-                                    $(svgId).svgPan('viewport');
+                                    $(svgId).svgPan('viewport', true, true);
                                 } else {
                                     $(svgId).off('mouseup')
                                             .off('mousedown')
                                             .off('mouseenter')
                                             .off('mouseleave');
                                 }
+                        });
+
+                        $('#resetViewport').click(function(){
+                            $(svgId).empty();
+                            afterglow.rendering.render(edges, vertices, node_stats, svgId, true);
+                            $(svgId).svgPan('viewport', true, true);
                         });
                     });
                 });
