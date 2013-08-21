@@ -100,11 +100,33 @@ afterglow.rendering = {
         }
 
 
-        node.append("circle")
+       var nodeCircle = node.append("circle")
             .attr("class", "nodeFigure")
             .attr("r", function (d) {
-                return 3 + node_stats[d._id].totalConnectivity * 0.3;
+                return 5 + node_stats[d._id].totalConnectivity * 0.3;
             });
+
+
+       $('#nodeSizeInherit').change(function(){
+            nodeCircle.attr('r', function (d) {
+                return 2 + d.size;
+            });
+        });
+
+
+       $('#nodeSizeBetweenness').change(function(){
+            nodeCircle.attr('r', function (d) {
+                return 5 + node_stats[d._id].betweenness*0.5;
+            });
+        });
+
+        $('#nodeSizeAverageConnectivity').change(function(){
+            nodeCircle.attr('r', function (d) {
+                return 5 + node_stats[d._id].totalConnectivity * 0.3;
+            });
+        });
+
+
 //                .call(force.drag);
 
 
