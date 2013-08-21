@@ -13,6 +13,8 @@
     <script src="{{ STATIC_URL }}js/jquery-svgpan.js" ></script>
     <script src="{{ STATIC_URL }}js/render.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}js/metrics.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-slider.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/slider.css" type="text/css"/>
 {% endblock %}
 
 
@@ -34,6 +36,19 @@
                     <label class="checkbox inline">
                         <input type="checkbox" id="nodeLabels" name="nodeLabels"  checked/>
                         Display node labels
+                    </label>
+
+                    <br><br>
+                    <label class="text-info"> Attraction
+                        <input id="attractionSlider" type="text" class="span2" value="" data-slider-min="100" data-slider-max="1" data-slider-step="-1" data-slider-value="1" data-slider-orientation="horizontal" data-slider-selection="after"data-slider-tooltip="hide">
+                    </label>
+
+                    <label class="text-info"> Node Charge
+                        <input id="chargeSlider" type="text" class="span2" value="" data-slider-min="-100" data-slider-max="-800" data-slider-step="10" data-slider-value="-800" data-slider-orientation="horizontal" data-slider-selection="after"data-slider-tooltip="hide">
+                    </label>
+
+                     <label class="text-info"> Gravity
+                        <input id="gravitySlider" type="text" class="span2" value="" data-slider-min="10" data-slider-max="1" data-slider-step="-1" data-slider-value="1" data-slider-orientation="horizontal" data-slider-selection="after"data-slider-tooltip="hide">
                     </label>
                 </fieldset>
                 <hr>

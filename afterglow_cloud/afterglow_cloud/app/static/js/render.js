@@ -54,11 +54,27 @@ afterglow.rendering = {
         var force = d3.layout.force()
             .nodes(graph.vertices)
             .links(graph.edges)
-            .gravity(.05)
+            .gravity(0.1)
             .distance(100)
             .charge(-100)
+            .linkStrength(0.1)
             .size([width, height])
             .start();
+
+
+        $('#attractionSlider').slider().on('slide', function(ev){
+            force.linkStrength(1.0  / ev.value);
+            force.start();
+        });
+        $('#chargeSlider').slider().on('slide', function(ev){
+            force.charge(ev.value);
+            force.start();
+        });
+        $('#gravitySlider').slider().on('slide', function(ev){
+            force.gravity(1.0 / ev.value);
+            force.start();
+        });
+
 
 
         var link = grp.selectAll(".link")
@@ -120,11 +136,13 @@ afterglow.rendering = {
 
             var color = d3.scale.category20();
 
-            var force = d3.layout.force()
-                .charge(-120)
-                .linkDistance(30)
-                .size([width, height]);
+
         });
+    },
+
+    "chargeValue" : -120,
+    getChargeValue : function () {
+        return afterglow.rendering.chargeValue;
     },
 
     init: function (heliosPath, graphsonPath, svgId) {
