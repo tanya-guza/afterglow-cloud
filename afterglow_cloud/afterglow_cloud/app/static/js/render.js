@@ -144,6 +144,18 @@ afterglow.rendering = {
                                 d3.selectAll('.nodeLabel')
                                     .attr('opacity', opacity);
                         });
+
+                        $('#panAndZoom').change(function(){
+                                var panZoom = $(this).is(':checked');
+                                if (panZoom){
+                                    $(svgId).svgPan('viewport');
+                                } else {
+                                    $(svgId).off('mouseup')
+                                            .off('mousedown')
+                                            .off('mouseenter')
+                                            .off('mouseleave');
+                                }
+                        });
                     });
                 });
 
