@@ -26,12 +26,14 @@
             <form id="controlForm">
                 <fieldset>
                     <label>Comon</label>
-                    <button class="btn btn-info btn-mini" id="zoomin">Zoom In</button>&nbsp;
-                    <button class="btn btn-info btn-mini" id="zoomout">Zoom Out</button> <br><br>
-                    <button class="btn btn-info btn-mini" id="reset">Reset</button> <br>
                     <label class="checkbox inline">
                         <input type="checkbox" id="panAndZoom" name="panAndZoom"  checked/>
                         Enable Pan-And-Zoom mode
+                    </label>
+
+                    <label class="checkbox inline">
+                        <input type="checkbox" id="nodeLabels" name="nodeLabels"  checked/>
+                        Display node labels
                     </label>
                 </fieldset>
                 <hr>
@@ -39,7 +41,7 @@
                     <label>Node size</label>
                      <label class="radio inline">
                         <input type="radio" id="nodeSizeNone" name="nodeSizeSource" value="0" />
-                        All nodes have the same size
+                        Use calculated &quot;size&quot; parameter
                     </label>
                     <label class="radio inline">
                         <input type="radio" id="nodeSizeBetweenness" name="nodeSizeSource" value="1" />
@@ -158,7 +160,11 @@
 
                     <br/><br/>
 
-
+                    <div class="text-left bottom-margin">
+                        <button class="btn btn-info btn-mini" id="zoomin">Zoom In</button>
+                        <button class="btn btn-info btn-mini" id="zoomout">Zoom Out</button>
+                        <button class="btn btn-info btn-mini" id="reset">Reset</button>
+                    </div>
                     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="renderViewport"/>
 
                 {% else %}

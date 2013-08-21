@@ -35,7 +35,7 @@ afterglow.rendering = {
      * @param node_stats node stats
      * @param svgId svg id
      */
-    render: function (edges, vertices, node_stats, svgId) {
+    render: function (edges, vertices, node_stats, svgId, display_labels) {
 
 
         var width = 960, height = 500;
@@ -73,17 +73,19 @@ afterglow.rendering = {
             .attr("class", "node")
             .call(force.drag);
 
-
-        node.append("text")
-            .attr("dx", 12)
-            .attr("dy", ".35em")
-            .text(function (d) {
-                return d._label;
-            });
+        if (display_labels){
+            node.append("text")
+                .attr("dx", 12)
+                .attr("dy", ".35em")
+                .attr("class", "nodeLabel")
+                .text(function (d) {
+                    return d._label;
+                });
+        }
 
 
         node.append("circle")
-            .attr("class", "node")
+            .attr("class", "nodeFigure")
             .attr("r", function (d) {
                 return 3 + node_stats[d._id].totalConnectivity * 0.3;
             });
@@ -134,13 +136,21 @@ afterglow.rendering = {
             var graphStats = afterglow.metrics.nodes(g, function (node_stats) {
                 g.E().then(function (edges) {
                     g.V().then(function (vertices) {
-                        afterglow.rendering.render(edges, vertices, node_stats, svgId);
+                        afterglow.rendering.render(edges, vertices, node_stats, svgId, true);
                         $(svgId).svgPan('viewport');
+
+                        $('#nodeLabels').change(function(){
+                                var opacity = $(this).is(':checked') ? '100' : '0';
+                                d3.selectAll('.nodeLabel')
+                                    .attr('opacity', opacity);
+                        });
                     });
                 });
 
             });
         });
+
+
 
 
     }
