@@ -31,3 +31,11 @@ svg#renderViewport{
 .bottom-margin{
     margin-bottom: 4px;
 }
+
+.custom-config-window{
+    padding: 8px;
+}
+
+.label-bold{
+    font-weight: bold;
+}
