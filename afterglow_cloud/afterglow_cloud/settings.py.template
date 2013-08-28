@@ -1,5 +1,6 @@
 import os.path
 
+# Please, change secret key at the bottom of the config!
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
     
@@ -188,3 +189,5 @@ LOGGING = {
         },
     }
 }
+
+SECRET_KEY = "CHANGE-ME-TO-LONG-RANDOM-STRING"
