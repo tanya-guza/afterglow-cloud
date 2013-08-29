@@ -12,7 +12,28 @@ and visualize the data as graphs on-the-fly. This project is a part of
 The core of this tool is derived from its command-line predecessor [AfterGlow](http://afterglow.sourceforge.net/). 
 AfterGlow Cloud runs primarily on Django. A live demo can be found [here](http://andromeda.ayrus.net:8080).
 
-Installation
+Development Installation
+------------
+Following instruction describe how to create development environment to run and debug Afterglow Cloud
+###Requirements:
+
+ * Python  SQLite bindings
+ * Python Imaging Library (PIL)
+ * Django 1.5.2
+ * Perl Text::CSV package
+ * simplejson
+ * Django libraries:
+  * ReCaptcha client
+  * Easy thumbnails
+  * OAuth2
+  <br/>
+
+<code>cd afterglow-cloud</code>
+<code>git checkout helios</code>
+<code>pip install pil easy_thumbnails django oauth2 simplejson recaptcha-client</code>
+
+
+Production Installation
 ------------
 
 Following provides installation requirements and procedure for AfterGlow Cloud.
