@@ -1,0 +1,47 @@
+<fieldset>
+    <a href="#">
+        <legend data-toggle="collapse" data-target="#advancedSettings">Advanced Settings</legend>
+    </a>
+    <fieldset id="advancedSettings">
+        <label class="input-medium"
+               title="Skips the specified number of lines from the data-file (say for example, header data).">
+            Skip lines
+            {{ form.skipLines.errors }}
+            {{ form.skipLines }}
+        </label>
+
+        <label class="input-medium" title="Maximum number of lines to read from the data-file.">
+
+            {{ form.maxLines.errors }}
+            Maximum lines
+            {{ form.maxLines }}
+
+        </label>
+
+        <label class="input-medium" title="Omits nodes which occur less than the specified threshold.">
+
+            {{ form.omitThreshold.errors }}
+            Omit threshold for each node
+            {{ form.omitThreshold }}
+
+        </label>
+
+        <label class="input-medium"
+               title="Omits nodes which have a lesser number of edges originating from them, than the specified threshold.">
+
+            {{ form.sourceFanOut.errors }}
+            Source fan out threshold
+            {{ form.sourceFanOut }}
+
+        </label>
+
+        <label class="input-medium"
+               title="Omits event nodes which have a lesser number of edges originating form them, than the specified threshold.">
+
+            {{ form.eventFanOut.errors }}
+            Event fan out threshold
+            {{ form.eventFanOut }}
+
+        </label>
+    </fieldset>
+</fieldset>

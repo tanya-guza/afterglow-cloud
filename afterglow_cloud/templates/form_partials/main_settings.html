@@ -1,0 +1,50 @@
+<fieldset>
+    <a href="#">
+        <legend data-toggle="collapse" data-target="#mainSettings">Main Settings</legend>
+    </a>
+
+
+    <fieldset id="mainSettings">
+        <label class="checkbox" title="Check to print the number of instances of each node present.">
+            {{ form.printNodeCount.errors }}
+            {{ form.printNodeCount }}Print node count
+        </label>
+
+
+        <label class="checkbox"
+               title="Split source and target as seperate nodes (otherwise same node with two edges).">
+
+            {{ form.splitNodes.errors }}
+            {{ form.splitNodes }}Split source and target nodes
+        </label>
+
+        <fieldset id="splittingModes" class="hide">
+
+            {{ form.splitMode.errors }}
+            <label>Splitting:</label>
+            {{ form.splitMode }} <a href="#" class="tooltip"
+                                    title="Splitting mode. See: http://afterglow.sourceforge.net/configuration.jpg for an example.">?</a>
+
+        </fieldset>
+
+        <label class="checkbox" title="Override default edge length">
+            {{ form.overrideEdge.errors }}
+
+            {{ form.overrideEdge }}
+            Override default edge length
+        </label>
+
+        <label class="checkbox" title="Override default edge length">
+            {{ form.overrideEdgeLength.errors }}
+            {{ form.overrideEdgeLength }}
+        </label>
+
+        <label class="input-medium" title="HEX colour for the text labels used on the graph.">
+
+            {{ form.textLabel.errors }}
+            <label>Text label colour:</label>
+            {{ form.textLabel }}
+
+        </label>
+    </fieldset>
+</fieldset>

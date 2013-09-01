@@ -1,0 +1,114 @@
+<fieldset id="inputSources"
+              data-placement="bottom"
+              data-trigger="hover"
+              title="Select the source of your data. Choose CSV to upload an already parsed log; Choose 'Lof File' to upload a generated log and then use a RegEx to parse it automatically to a CSV file for AfterGlow or use an account you have with Loggly.com to bring in your logs to AfterGlow.">
+        <legend>Input source</legend>
+        <label class="radio inline">
+            <input type="radio" name="xLogType" checked="checked" value="data" data-toggle="visibility"
+                   data-target="#file"/>
+            CSV Data
+        </label>
+
+        <label class="radio inline">
+            <input type="radio" name="xLogType" value="log" class="configTypeRadio" data-toggle="visibility"
+                   data-target="#file,#regex"/>Log File
+        </label>
+
+        <label class="radio inline">
+            <input type="radio" name="xLogType" value="loggly" class="configTypeRadio" value="data"
+                   data-toggle="visibility" data-target="#loggly"/>Loggly
+        </label>
+    </fieldset>
+
+    <fieldset id="loggly" class="hide">
+
+        {{ form.logglySubdomain.errors }}
+        <label>Loggly Subdomain:</label>
+        {{ form.logglySubdomain }}
+        <a href="#" class="tooltip" title="Enter your account subdomain at Loggly. E.g: 'foo.loggly.com'">?</a>
+
+        <div class="cError"><span id="subdomainE" class="cErrorMsg"></span></div>
+
+
+        {% if afLogglySet %}
+
+            <div id="logglySetMsg">
+				<span class="success">
+					You've previously authorized AfterGlow for the subdomain: <b>{{ afLogglySubdomain }}</b>.loggly.com
+				</span>
+                <a href="revoke" alt="Revoke access to AfterGlow from your Loggly subdomain">Revoke Access</a>
+            </div>
+
+        {% endif %}
+
+    </fieldset>
+    <br>
+    <fieldset id="file">
+
+        {{ form.dataFile.errors }}
+        <label>File
+            {{ form.dataFile }}
+        </label>
+
+        <div class="cError"><span id="dataFileE" class="cErrorMsg"></span></div>
+
+
+    </fieldset>
+
+    <fieldset id="regex" class="hide">
+        {{ form.regEx.errors }}
+        <label>Reg Ex:</label>
+        {{ form.regExType }}
+        <div id="regExInputs">||&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            {{ form.regEx }}
+            {{ form.regExChoices }} <a href="#" class="tooltip"
+                                       title="Enter a custom regular expression or choose from a list of predefined (already saved) expressions to parse your log into a CSV file. You will have to appropriately have groupings in your expressions for each column. You will also have to check 'Two node mode' below if you're trying to parse the file into two columns.">?</a>
+        </div>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div id="regDesc"></div>
+
+
+        <div class="field">
+
+            <label>Save RegEx:</label>
+            {{ form.saveRegEx }} <a href="#" class="tooltip"
+                                    title="When checked, you can can save your custom expression for others users to use as a parser in the future.">?</a>
+
+        </div>
+
+
+        <fieldset id="saveRegExDetails">
+
+            <legend>RegEx Details:</legend>
+            <div class="field">
+                <label>Name:</label>
+                {{ form.saveRegExName }} <a href="#" class="tooltip"
+                                            title="Enter a name for your expression. E.g: 'Apache - IP;Size'">?</a>
+                {{ form.saveRegExName.errors }}
+            </div>
+
+            <div class="field">
+                <label>Description:</label>
+                {{ form.saveRegExDescription }} <a href="#" class="tooltip"
+                                                   title="Enter a description for your expression.">?</a>
+                {{ form.saveRegExDescription.errors }}
+            </div>
+
+            <br/>
+
+            <div class="smallText">
+                Enter a name and description for submitting your expression, so that other users can use your
+                expression. Your description should be at least ten characters in length.
+            </div>
+
+        </fieldset>
+    </fieldset>
+
+    <fieldset id="csv" class="hide">
+
+        {{ form.twoNodeMode.errors }}
+        <label>Two node mode:</label>
+        {{ form.twoNodeMode }} <a href="#" class="tooltip"
+                                  title="When using data with two columns, this option should be checked.">?</a>
+
+    </fieldset>
