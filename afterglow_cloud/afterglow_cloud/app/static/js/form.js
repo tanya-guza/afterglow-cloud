@@ -1,3 +1,18 @@
+
+afterglow.form = {
+
+    validators = {
+        
+    },
+
+    /**
+    *   Hides all validation messages on the specified form
+    */
+    clearValidation : function (form){
+        $(form).children(".validation-message").hide();
+    }
+}
+
 /* Globals */
 
 var configCount = 0; // A counter for the number of configuration lines.
