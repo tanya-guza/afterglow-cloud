@@ -1,17 +1,83 @@
 
 afterglow.form = {
 
-    validators = {
-        
+    /** Map with validators */
+    validators : {
+        inputSources : function(){
+            var logType = $('input[name = "xLogType"]:checked').val();
+                        
+            switch(logType){
+                case 'data':
+                case 'log':
+                    return afterglow.form
+                        .validate('#id_dataFile');
+                    break;
+                case 'loggly':
+                    return afterglow.form
+                        .validate('#id_logglySubdomain');
+                    break;
+            }
+
+            return true;
+        }
+    },
+
+    validate : function (field, conditions){
+
+        if (conditions === undefined){
+            conditions = ['notEmpty'];
+        }
+
+        var isValid = true;
+        var value = $(field).val();
+        for(var i = 0; i < conditions.length; i++){
+            isValid = isValid && afterglow.form.validateHelpers[conditions[i]](value);
+        }
+
+        if (!isValid){
+            $('.validation-message[data-validation-for = "' + field  + '"]').show();
+        }
+
+        return isValid;
+    },
+
+    validateHelpers : {
+        notEmpty : function(value){
+            return !(!value || /^\s*$/.test(value));
+        }
     },
 
     /**
-    *   Hides all validation messages on the specified form
+    *   Hides all validation messages in the specified form/fieldset
     */
-    clearValidation : function (form){
-        $(form).children(".validation-message").hide();
+    clearValidation : function (fieldset){
+        $(fieldset).children(".validation-message").hide();
+    },
+
+    init : function(){
+        
+        /** Input sources validation reset*/
+        $('#inputSources').children().change(function(){
+            afterglow.form.clearValidation("#inputSources,#loggly,#file");
+        });
+
+        $('#xRenderProcess').click(function(){
+            var isValid = true;
+            for(var validator in afterglow.form.validators){
+                if (afterglow.form.validators.hasOwnProperty(validator)){
+                    isValid = isValid && afterglow.form.validators[validator]();
+                }
+            }
+
+            return isValid;
+
+        });
     }
 }
+
+$(function(){
+    afterglow.form.init();
+});
 
 /* Globals */
 

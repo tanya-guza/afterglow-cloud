@@ -18,13 +18,18 @@
             <input type="radio" name="xLogType" value="loggly" class="configTypeRadio" value="data"
                    data-toggle="visibility" data-target="#loggly"/>Loggly
         </label>
-    </fieldset>
+</fieldset>
 
     <fieldset id="loggly" class="hide">
 
         {{ form.logglySubdomain.errors }}
         <label>Loggly Subdomain:</label>
         {{ form.logglySubdomain }}
+        <div class="alert alert-error validation-message hide" data-validation-for="#id_logglySubdomain">
+            <span>
+                Please enter loggly subdomain
+            </span>
+        </div>
         <a href="#" class="tooltip" title="Enter your account subdomain at Loggly. E.g: 'foo.loggly.com'">?</a>
 
         <div class="cError"><span id="subdomainE" class="cErrorMsg"></span></div>
@@ -50,7 +55,11 @@
             {{ form.dataFile }}
         </label>
 
-        <div class="cError"><span id="dataFileE" class="cErrorMsg"></span></div>
+        <div class="alert alert-error validation-message hide" data-validation-for="#id_dataFile">
+            <span>
+                Please, choose file for processing
+            </span>
+        </div>
 
 
     </fieldset>
