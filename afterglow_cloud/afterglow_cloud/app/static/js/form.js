@@ -9,8 +9,27 @@ afterglow.form = {
             switch(logType){
                 case 'data':
                 case 'log':
-                    return afterglow.form
+                    isValid = afterglow.form
                         .validate('#id_dataFile');
+
+                    var regexType = $('input[name = "regExType"]:checked').val();
+                    switch(regexType){
+                        case '1':
+                            isValid = afterglow.form
+                                .validate('#id_regEx') && isValid;
+
+                                if($('#id_saveRegEx').is(':checked')){
+                                    isValid = afterglow.form.validate('#id_saveRegExName') && isValid;
+                                    isValid = afterglow.form.validate('#id_saveRegExDescription') && isValid;
+                                }
+                            break;
+                        case '2':
+                            isValid = afterglow.form
+                                .validate('#id_regExChoices', ['optionSelected'])  && isValid;
+                            break;
+                    }
+
+                    return isValid;
                     break;
                 case 'loggly':
                     return afterglow.form
@@ -29,9 +48,8 @@ afterglow.form = {
         }
 
         var isValid = true;
-        var value = $(field).val();
         for(var i = 0; i < conditions.length; i++){
-            isValid = isValid && afterglow.form.validateHelpers[conditions[i]](value);
+            isValid = isValid && afterglow.form.validateHelpers[conditions[i]](field);
         }
 
         if (!isValid){
@@ -42,8 +60,12 @@ afterglow.form = {
     },
 
     validateHelpers : {
-        notEmpty : function(value){
+        notEmpty : function(field){
+            var value = $(field).val();
             return !(!value || /^\s*$/.test(value));
+        },
+        optionSelected : function(field){
+            return !!$(field).children('option:selected').length;
         }
     },
 
@@ -58,7 +80,15 @@ afterglow.form = {
         
         /** Input sources validation reset*/
         $('#inputSources').children().change(function(){
-            afterglow.form.clearValidation("#inputSources,#loggly,#file");
+            afterglow.form.clearValidation("#inputSources,#loggly,#file,#regExInputs,#saveRegExDetails");
+        });
+
+        $('#regex').children().change(function(){
+            afterglow.form.clearValidation("#regExInputs");
+        });
+
+        $('#saveRegExDetails').children().change(function(){
+            afterglow.form.clearValidation("#saveRegExDetails");
         });
 
         $('#xRenderProcess').click(function(){

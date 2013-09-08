@@ -1,3 +1,4 @@
+{% load widget_tweaks %}
 <fieldset id="inputSources"
               data-placement="bottom"
               data-trigger="hover"
@@ -72,6 +73,17 @@
             {{ form.regEx }}
             {{ form.regExChoices }} <a href="#" class="tooltip"
                                        title="Enter a custom regular expression or choose from a list of predefined (already saved) expressions to parse your log into a CSV file. You will have to appropriately have groupings in your expressions for each column. You will also have to check 'Two node mode' below if you're trying to parse the file into two columns.">?</a>
+            <div class="alert alert-error validation-message hide" data-validation-for="#id_regEx">
+                <span>
+                    Please, enter regular expression
+                </span>
+            </div>
+
+            <div class="alert alert-error validation-message hide" data-validation-for="#id_regExChoices">
+                <span>
+                    Please, select regular expression
+                </span>
+            </div>
         </div>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div id="regDesc"></div>
@@ -80,13 +92,15 @@
         <div class="field">
 
             <label>Save RegEx:</label>
-            {{ form.saveRegEx }} <a href="#" class="tooltip"
+            {{ form.saveRegEx | set_data:"toggle:visibility"| set_data:"target:#saveRegExDetails"}} 
+
+            <a href="#" class="tooltip"
                                     title="When checked, you can can save your custom expression for others users to use as a parser in the future.">?</a>
 
         </div>
 
 
-        <fieldset id="saveRegExDetails">
+        <fieldset id="saveRegExDetails" class="hide">
 
             <legend>RegEx Details:</legend>
             <div class="field">
@@ -94,6 +108,11 @@
                 {{ form.saveRegExName }} <a href="#" class="tooltip"
                                             title="Enter a name for your expression. E.g: 'Apache - IP;Size'">?</a>
                 {{ form.saveRegExName.errors }}
+                <div class="alert alert-error validation-message hide" data-validation-for="#id_saveRegExName">
+                    <span>
+                        Please, enter name for custom regular expression
+                    </span>
+                </div>
             </div>
 
             <div class="field">
@@ -101,6 +120,11 @@
                 {{ form.saveRegExDescription }} <a href="#" class="tooltip"
                                                    title="Enter a description for your expression.">?</a>
                 {{ form.saveRegExDescription.errors }}
+                 <div class="alert alert-error validation-message hide" data-validation-for="#id_saveRegExDescription">
+                    <span>
+                        Please, enter name for custom regular expression
+                    </span>
+                </div>
             </div>
 
             <br/>
