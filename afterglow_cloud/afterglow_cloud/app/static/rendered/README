@@ -1,0 +1,2 @@
+This directory contains files that were generated from user input and used to store parsed logs, configs, etc.
+Please be careful with file permissions and set them to 600 to reduce security risks
