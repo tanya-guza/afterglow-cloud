@@ -62,19 +62,21 @@
         $('#configuration').collapse('hide');
 
 
-        toggleVisibility = function (component) {
-
-            $('input:radio[data-toggle="visibility"]').each(function () {
-                var target = $(this).data("target");
-                $(target).hide();
+        toggleVisibilityRadio = function () {
+             $('input:radio[data-toggle="visibility"]' + '[ name="' +  $(this).attr('name') + '"]').each(function (radioIndex, otherRadio) {
+                $($(otherRadio).data('target')).hide();
             });
 
-
-            var target = $(this).data("target");
-            $(target).show();
+            $($(this).data('target')).show();
         };
 
-        $('input:radio[data-toggle="visibility"]').change(toggleVisibility);
+        toggleVisibilityCheckbox = function () {
+            $($(this).data('target')).toggle();
+        };
+
+        $('input:radio[data-toggle="visibility"]').change(toggleVisibilityRadio);
+        $('input:checkbox[data-toggle="visibility"]').change(toggleVisibilityCheckbox);
+
     </script>
 
 {% endblock %}
