@@ -30,7 +30,7 @@ Following instruction describe how to create development environment to run and 
 
 <code>cd afterglow-cloud</code>
 <code>git checkout helios</code>
-<code>pip install pil easy_thumbnails django oauth2 simplejson recaptcha-client</code>
+<code>pip install pil easy_thumbnails django oauth2 simplejson recaptcha-client django-widget-tweaks</code>
 
 
 Production Installation
