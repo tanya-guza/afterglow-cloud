@@ -5,12 +5,13 @@ afterglow.form = {
     validators : {
         inputSources : function(){
             var logType = $('input[name = "xLogType"]:checked').val();
+            var isValid = true;
                         
             switch(logType){
                 case 'data':
                 case 'log':
                     isValid = afterglow.form
-                        .validate('#id_dataFile');
+                        .validate('#id_dataFile') && isValid;
 
                     var regexType = $('input[name = "regExType"]:checked').val();
                     switch(regexType){
@@ -37,7 +38,16 @@ afterglow.form = {
                     break;
             }
 
-            return true;
+            return isValid;
+        },
+
+        mainSettings : function(){
+            afterglow.form.clearValidation("#mainSettings");
+            var isValid = true;
+            isValid = afterglow.form.validate('#id_overrideEdgeLength') && isValid;
+            isValid = afterglow.form.validate('#id_textLabel', ['notEmpty', 'htmlColor']) && isValid;
+
+            return isValid;
         }
     },
 
@@ -66,14 +76,19 @@ afterglow.form = {
         },
         optionSelected : function(field){
             return !!$(field).children('option:selected').length;
+        },
+        htmlColor : function(field){
+            var value = $(field).val();
+            return /^#[0-9a-f]{3}([0-9a-f]{3})?$/i.test(value);
         }
+
     },
 
     /**
     *   Hides all validation messages in the specified form/fieldset
     */
     clearValidation : function (fieldset){
-        $(fieldset).children(".validation-message").hide();
+        $(fieldset).find(".validation-message").hide();
     },
 
     init : function(){
@@ -92,10 +107,12 @@ afterglow.form = {
         });
 
         $('#xRenderProcess').click(function(){
+            afterglow.form.clearValidation('#renderMainForm');
+            
             var isValid = true;
             for(var validator in afterglow.form.validators){
                 if (afterglow.form.validators.hasOwnProperty(validator)){
-                    isValid = isValid && afterglow.form.validators[validator]();
+                    isValid = afterglow.form.validators[validator]() && isValid;
                 }
             }
 
