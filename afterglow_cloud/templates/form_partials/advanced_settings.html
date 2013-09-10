@@ -8,6 +8,12 @@
             Skip lines
             {{ form.skipLines.errors }}
             {{ form.skipLines }}
+
+            <div class="alert alert-error validation-message hide" data-validation-for="#id_skipLines">
+                <span>
+                    Please, enter number of lines to skip or 0
+                </span>
+            </div>
         </label>
 
         <label class="input-medium" title="Maximum number of lines to read from the data-file.">
@@ -16,6 +22,11 @@
             Maximum lines
             {{ form.maxLines }}
 
+            <div class="alert alert-error validation-message hide" data-validation-for="#id_maxLines">
+                <span>
+                    Please, enter maximum amount of lines to be processed
+                </span>
+            </div>
         </label>
 
         <label class="input-medium" title="Omits nodes which occur less than the specified threshold.">
@@ -24,6 +35,11 @@
             Omit threshold for each node
             {{ form.omitThreshold }}
 
+            <div class="alert alert-error validation-message hide" data-validation-for="#id_omitThreshold">
+                <span>
+                    Please, enter number of occurences for node to be displayed
+                </span>
+            </div>
         </label>
 
         <label class="input-medium"
@@ -33,6 +49,11 @@
             Source fan out threshold
             {{ form.sourceFanOut }}
 
+            <div class="alert alert-error validation-message hide" data-validation-for="#id_sourceFanOut">
+                <span>
+                    Please, enter how many output edges source node should have to be displayed
+                </span>
+            </div>
         </label>
 
         <label class="input-medium"
@@ -42,6 +63,11 @@
             Event fan out threshold
             {{ form.eventFanOut }}
 
+            <div class="alert alert-error validation-message hide" data-validation-for="#id_eventFanOut">
+                <span>
+                    Please, enter how many output edges event node should have to be displayed
+                </span>
+            </div>
         </label>
     </fieldset>
 </fieldset>

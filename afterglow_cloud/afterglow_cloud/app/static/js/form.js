@@ -48,6 +48,19 @@ afterglow.form = {
             isValid = afterglow.form.validate('#id_textLabel', ['notEmpty', 'htmlColor']) && isValid;
 
             return isValid;
+        },
+
+        advancedSettings : function(){
+            afterglow.form.clearValidation("#advancedSettings");
+            var isValid = true;
+
+            isValid = afterglow.form.validate('#id_skipLines', ['notEmpty', 'isInteger']) && isValid;
+            isValid = afterglow.form.validate('#id_maxLines', ['notEmpty', 'isInteger']) && isValid;
+            isValid = afterglow.form.validate('#id_omitThreshold', ['notEmpty', 'isInteger']) && isValid;
+            isValid = afterglow.form.validate('#id_sourceFanOut', ['notEmpty', 'isInteger']) && isValid;
+            isValid = afterglow.form.validate('#id_eventFanOut', ['notEmpty', 'isInteger']) && isValid;
+
+            return isValid;
         }
     },
 
@@ -60,6 +73,9 @@ afterglow.form = {
         var isValid = true;
         for(var i = 0; i < conditions.length; i++){
             isValid = isValid && afterglow.form.validateHelpers[conditions[i]](field);
+            if (!isValid){
+                break;
+            }
         }
 
         if (!isValid){
@@ -80,6 +96,10 @@ afterglow.form = {
         htmlColor : function(field){
             var value = $(field).val();
             return /^#[0-9a-f]{3}([0-9a-f]{3})?$/i.test(value);
+        },
+        isInteger : function(field){
+            var value = $(field).val();
+            return /^[0-9]+$/.test(value);
         }
 
     },
