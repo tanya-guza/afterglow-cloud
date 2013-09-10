@@ -212,7 +212,12 @@ afterglow.form = {
     },
 
     initModalWindows : function(){
-
+        $('#nodeColour').find('add-rule-button').click(afterglow.form.eventHandlers.addNodeColourRule);
+        $('#nodeSize').find('add-rule-button').click(afterglow.form.eventHandlers.addNodeSizeRule);
+        $('#nodeThreshold').find('add-rule-button').click(afterglow.form.eventHandlers.addNodeThresholdRule);
+        $('#nodeClustering').find('add-rule-button').click(afterglow.form.eventHandlers.addNodeClusteringRule);
+        $('#customLine').find('add-rule-button').click(afterglow.form.eventHandlers.addCustomLine);
+        $('#configGlobals').find('add-rule-button').click(afterglow.form.eventHandlers.addConfigGlobalsRule);
     },
 
     init : function(){
