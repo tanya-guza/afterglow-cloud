@@ -1,69 +1,102 @@
 
 afterglow.form = {
 
-    /** Map with validators */
+    /** Map with validators. Validators are functions that validate
+        user input taking into account current state of the UI.
+     */
     validators : {
-        inputSources : function(){
-            var logType = $('input[name = "xLogType"]:checked').val();
-            var isValid = true;
-                        
-            switch(logType){
-                case 'data':
-                case 'log':
-                    isValid = afterglow.form
-                        .validate('#id_dataFile') && isValid;
+        onRender : {
+            /* Valited input source fieldset */
+            inputSources : function(){
+                var logType = $('input[name = "xLogType"]:checked').val();
+                var isValid = true;
+                            
+                switch(logType){
+                    case 'data':
+                    case 'log':
+                        isValid = afterglow.form
+                            .validate('#id_dataFile') && isValid;
 
-                    var regexType = $('input[name = "regExType"]:checked').val();
-                    switch(regexType){
-                        case '1':
-                            isValid = afterglow.form
-                                .validate('#id_regEx') && isValid;
+                        var regexType = $('input[name = "regExType"]:checked').val();
+                        switch(regexType){
+                            case '1':
+                                isValid = afterglow.form
+                                    .validate('#id_regEx') && isValid;
 
-                                if($('#id_saveRegEx').is(':checked')){
-                                    isValid = afterglow.form.validate('#id_saveRegExName') && isValid;
-                                    isValid = afterglow.form.validate('#id_saveRegExDescription') && isValid;
-                                }
-                            break;
-                        case '2':
-                            isValid = afterglow.form
-                                .validate('#id_regExChoices', ['optionSelected'])  && isValid;
-                            break;
-                    }
+                                    if($('#id_saveRegEx').is(':checked')){
+                                        isValid = afterglow.form.validate('#id_saveRegExName') && isValid;
+                                        isValid = afterglow.form.validate('#id_saveRegExDescription') && isValid;
+                                    }
+                                break;
+                            case '2':
+                                isValid = afterglow.form
+                                    .validate('#id_regExChoices', ['optionSelected'])  && isValid;
+                                break;
+                        }
 
-                    return isValid;
-                    break;
-                case 'loggly':
-                    return afterglow.form
-                        .validate('#id_logglySubdomain');
-                    break;
-            }
+                        return isValid;
+                        break;
+                    case 'loggly':
+                        return afterglow.form
+                            .validate('#id_logglySubdomain');
+                        break;
+                }
 
-            return isValid;
+                return isValid;
+            },
+
+            /* Validates main settings fieldset */
+            mainSettings : function(){
+                afterglow.form.clearValidation("#mainSettings");
+                var isValid = true;
+                isValid = afterglow.form.validate('#id_overrideEdgeLength') && isValid;
+                isValid = afterglow.form.validate('#id_textLabel', ['notEmpty', 'htmlColor']) && isValid;
+
+                return isValid;
+            },
+
+            /* Validated advanced setttings fieldset */
+            advancedSettings : function(){
+                afterglow.form.clearValidation("#advancedSettings");
+                var isValid = true;
+
+                isValid = afterglow.form.validate('#id_skipLines', ['notEmpty', 'isInteger']) && isValid;
+                isValid = afterglow.form.validate('#id_maxLines', ['notEmpty', 'isInteger']) && isValid;
+                isValid = afterglow.form.validate('#id_omitThreshold', ['notEmpty', 'isInteger']) && isValid;
+                isValid = afterglow.form.validate('#id_sourceFanOut', ['notEmpty', 'isInteger']) && isValid;
+                isValid = afterglow.form.validate('#id_eventFanOut', ['notEmpty', 'isInteger']) && isValid;
+
+                return isValid;
+            },
         },
 
-        mainSettings : function(){
-            afterglow.form.clearValidation("#mainSettings");
-            var isValid = true;
-            isValid = afterglow.form.validate('#id_overrideEdgeLength') && isValid;
-            isValid = afterglow.form.validate('#id_textLabel', ['notEmpty', 'htmlColor']) && isValid;
+        /** Validators for configuration modal windows */
+        nodeColour : function(){
 
-            return isValid;
         },
 
-        advancedSettings : function(){
-            afterglow.form.clearValidation("#advancedSettings");
-            var isValid = true;
+        nodeSize : function(){
 
-            isValid = afterglow.form.validate('#id_skipLines', ['notEmpty', 'isInteger']) && isValid;
-            isValid = afterglow.form.validate('#id_maxLines', ['notEmpty', 'isInteger']) && isValid;
-            isValid = afterglow.form.validate('#id_omitThreshold', ['notEmpty', 'isInteger']) && isValid;
-            isValid = afterglow.form.validate('#id_sourceFanOut', ['notEmpty', 'isInteger']) && isValid;
-            isValid = afterglow.form.validate('#id_eventFanOut', ['notEmpty', 'isInteger']) && isValid;
+        },
 
-            return isValid;
+        nodeThreshold : function(){
+
+        },
+
+        nodeClustering : function(){
+
+        },
+
+        configGlobals : function(){
+
+        },
+
+        customLine : function(){
+
         }
     },
 
+    /* Function to validate specified field with list of validate helpers */
     validate : function (field, conditions){
 
         if (conditions === undefined){
@@ -85,18 +118,23 @@ afterglow.form = {
         return isValid;
     },
 
+    /* Functions that allow to validate field against some particular constraint */
     validateHelpers : {
+        /* Returns true if field is not empty/blank */
         notEmpty : function(field){
             var value = $(field).val();
             return !(!value || /^\s*$/.test(value));
         },
+        /* Returns true if there is an option selected in select input */
         optionSelected : function(field){
             return !!$(field).children('option:selected').length;
         },
+        /* Returns true if field contains color in HTML format */
         htmlColor : function(field){
             var value = $(field).val();
             return /^#[0-9a-f]{3}([0-9a-f]{3})?$/i.test(value);
         },
+        /* Returns true if field contains positive integer number */
         isInteger : function(field){
             var value = $(field).val();
             return /^[0-9]+$/.test(value);
@@ -109,6 +147,72 @@ afterglow.form = {
     */
     clearValidation : function (fieldset){
         $(fieldset).find(".validation-message").hide();
+    },
+
+    eventHandlers : {
+        addNodeColourRule : function(){
+            afterglow.form.clearValidation("#nodeColour");
+            if (afterglow.form.validators.nodeColour()){
+                // Event handler code goes here
+                return true;
+            } else {
+                return false;
+            }
+        },
+
+        addNodeSizeRule : function(){
+            afterglow.form.clearValidation("#nodeSize");
+            if (afterglow.form.validators.nodeSize()){
+                // Event handler code goes here
+                return true;
+            } else {
+                return false;
+            }
+        },
+
+        addNodeThresholdRule : function(){
+            afterglow.form.clearValidation("#nodeThreshold");
+            if (afterglow.form.validators.nodeThreshold()){
+                // Event handler code goes here
+                return true;
+            } else {
+                return false;
+            }
+        },
+
+        addNodeClusteringRule : function(){
+            afterglow.form.clearValidation("#nodeClustering");
+            if (afterglow.form.validators.nodeClustering()){
+                // Event handler code goes here
+                return true;
+            } else {
+                return false;
+            }
+        },
+
+        addConfigGlobalsRule : function(){
+            afterglow.form.clearValidation("#configGlobals");
+            if (afterglow.form.validators.configGlobals()){
+                // Event handler code goes here
+                return true;
+            } else {
+                return false;
+            }
+        },
+
+        addCustomLine : function(){
+            afterglow.form.clearValidation("#customLine");
+            if (afterglow.form.validators.customLine()){
+                // Event handler code goes here
+                return true;
+            } else {
+                return false;
+            }
+        }
+    },
+
+    initModalWindows : function(){
+
     },
 
     init : function(){
@@ -130,9 +234,9 @@ afterglow.form = {
             afterglow.form.clearValidation('#renderMainForm');
             
             var isValid = true;
-            for(var validator in afterglow.form.validators){
-                if (afterglow.form.validators.hasOwnProperty(validator)){
-                    isValid = afterglow.form.validators[validator]() && isValid;
+            for(var validator in afterglow.form.validators.onRender){
+                if (afterglow.form.validators.onRender.hasOwnProperty(validator)){
+                    isValid = afterglow.form.validators.onRender[validator]() && isValid;
                 }
             }
 
