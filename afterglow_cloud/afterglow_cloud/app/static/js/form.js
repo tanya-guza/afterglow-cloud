@@ -82,10 +82,10 @@ afterglow.form = {
                     case 'none':
                         break;
                     case 'if':
-                        isValid = afterglow.form.validate('#xColourIfCondition');
+                        isValid = afterglow.form.validate('#xColourIfCondition') && isValid;
                         break;
                     case 'custom':
-                        isValid = afterglow.form.validate('#xColourCustomCondition');
+                        isValid = afterglow.form.validate('#xColourCustomCondition') && isValid;
                         break;
                 }
 
@@ -93,15 +93,44 @@ afterglow.form = {
         },
 
         nodeSize : function(){
+            afterglow.form.clearValidation('#nodeSize');
+            var isValid = true;
+       
+            if ( $("input[name='xSizeRadio']:checked").val() == "exp"){                    
+                isValid = afterglow.form.validate('#xSizeCondition') && isValid;
+            }
+
+            isValid = afterglow.form.validate('#xThresholdType', ['optionSelected']) && isValid;
+
+            return isValid;
 
         },
 
         nodeThreshold : function(){
+            afterglow.form.clearValidation('#nodeThreshold');
+            var isValid = true;
+
+            isValid = afterglow.form.validate('#xThresholdType', ['optionSelected']) && isValid;
+            isValid = afterglow.form.validate('#xThresholdSize', ['notEmpty', 'isInteger']) && isValid;
+
+            return isValid;
 
         },
 
         nodeClustering : function(){
+            var isValid = true;
 
+            isValid =  afterglow.form.validate('#xClusteringType', ['optionSelected']) && isValid;
+
+            var clusteringType = $("input[name='xClusteringRadio']:checked").val().toLowerCase();
+          
+            if(clusteringType == "exp"){
+                isValid = afterglow.form.validate('#xClusteringCondition') && isValid;
+            }else{
+                isValid = afterglow.form.validate('#xClusteringPort', ['isInteger']) && isValid;
+            }
+            
+            return isValid;
         },
 
         configGlobals : function(){
@@ -207,7 +236,42 @@ afterglow.form = {
         addNodeSizeRule : function(){
             afterglow.form.clearValidation("#nodeSize");
             if (afterglow.form.validators.nodeSize()){
-                // Event handler code goes here
+
+                var rawRule = "";
+                var rule = "Node Size";
+                var target = $("#xSizeType").val().toLowerCase();
+                var sizeType = $("input[name='xSizeRadio']:checked").val();
+                var value = "";
+
+
+                if( target == "all"){
+                    rawRule = "size=";
+                }else{
+                    rawRule = "size." + target + "=";
+                }
+
+
+                if ( sizeType == "exp"){                    
+                    value = $("#xSizeCondition").val();
+                    rawRule +=  value;
+                }else{
+
+                    if(sizeType == "num"){
+                        value = "$" + sizeType + "Count{$" + sizeType + "Name};";
+                        rawRule += value;
+                    
+                    }else if(sizeType == "third"){
+                        value = "$fields[2]";
+                        rawRule += value;
+                    }else{
+                        value = "$fields[3]";
+                        rawRule += value;
+                    }
+
+                }
+
+                afterglow.form.addRuleToConfig(rawRule);
+                afterglow.form.addRuleToTable(rule + ':' + value,'none', target);
                 return true;
             } else {
                 return false;
@@ -217,7 +281,24 @@ afterglow.form = {
         addNodeThresholdRule : function(){
             afterglow.form.clearValidation("#nodeThreshold");
             if (afterglow.form.validators.nodeThreshold()){
-                // Event handler code goes here
+                
+
+                var raw_rule = "";
+                var rule = "Node Threshold";
+                var target = $("#xThresholdType").val().toLowerCase();
+                var value = $("#xThresholdSize").val();
+                
+                if($("#xThresholdType").attr("value") == "all"){
+
+                    raw_rule = "threshold=" + value;
+                
+                }else{
+                
+                    raw_rule = "threshold." + target + "=" + value;
+                }
+
+                afterglow.form.addRuleToConfig(raw_rule);
+                afterglow.form.addRuleToTable(rule + ' : ' + value, 'none', target);
                 return true;
             } else {
                 return false;
@@ -227,7 +308,49 @@ afterglow.form = {
         addNodeClusteringRule : function(){
             afterglow.form.clearValidation("#nodeClustering");
             if (afterglow.form.validators.nodeClustering()){
-                // Event handler code goes here
+
+                var rawRule = '';
+                var target = $("#xClusteringType").val().toLowerCase();
+                var clusteringType = $("input[name='xClusteringRadio']:checked").val();
+                var value = "";
+                var rule = "Node Clustering";
+                
+                userHTML = "Cluster :: " + $("#xClusteringType").attr("value");
+                
+                if(target == "all"){
+                    rawRule = "cluster=";        
+                }else{
+                    rawRule = "cluster." + target + "=";    
+                }
+                
+                if (clusteringType == "ip"){
+                    
+                    var clusteringIPType =  $("#xClusteringIPType").val();
+                
+                    if(clusteringIPType == "a"){
+                        value = 'regex_replace("(\\\\d\\+)\\\\.\\\\d\\+")."/8"';
+                        rawRule += value;
+                    }else if(clusteringIPType == "b"){
+                        value = 'regex_replace("(\\\\d\\+\\\\.\\\\d\\+)\\\\.\\\\d\\+")."/16"';
+                        rawRule += value;
+                    }else{
+                        value = 'regex_replace("(\\\\d\\+\\\\.\\\\d\\+\\\\.\\\\d\\+)\\\\.\\\\d\\+")."/24"';
+                        rawRule += value;
+                    }
+                    
+                    
+                }else if(clusteringType == "exp"){
+                    value = $("#xClusteringCondition").val();
+                    rawRule += value;
+                
+                }else{
+                    
+                    value = $("#xClusteringPort").attr("value");
+                    rawRule += '\"> ' + value + '\" if ($fields[2]>' + value + ')';
+                }
+                
+                afterglow.form.addRuleToConfig(rawRule);
+                afterglow.form.addRuleToTable(rule + ' : ' + value, 'none', target);
                 return true;
             } else {
                 return false;
@@ -828,81 +951,6 @@ function changeOrder(id, type){
     }
 }
 
-/*	Add a colour configuration line.
- *	@Params: None.
- *	@Return: None.
- */
-function addColour(){
-    
-    var elemID = configCount++;
-    
-    var html = "Colour :: " +  $("#xColourType").attr("value") + " | " + $("#xColourHEX").attr("value") + " | ";
-    
-    //Prepare and add the element to the user UI.
-    if ($("input[name='xColourRadio']:checked").val() == "if"){
-    
-    	// not empty -- condition
-        html += " IF | " + $("#xColourIfCondition").attr("value");
-        
-    }else if($("input[name='xColourRadio']:checked").val() == "custom"){
-    
-        html += " Custom | " + $("#xColourCustomCondition").attr("value");
-        
-    }
-    
-    
-    html += "   <span class=\"colourBox\" style=\"background-color: " + $("#xColourHEX").attr("value") + ";\"> &nbsp;&nbsp;&nbsp;&nbsp; </span>"; 
-    
-    appendUserConfigDiv(elemID, html);
-
-	//Prepare and add the element to the hidden config end.
-    if($("#xColourType").attr("value") == "All"){
-    
-        html = "color=\"" + $("#xColourHEX").attr("value") + "\"";
-        
-    }else{
-    
-        html = "color." + $("#xColourType").attr("value").toLowerCase() + "=\"" + $("#xColourHEX").attr("value") + "\"";    
-        
-    }
-    
-    if ($("input[name='xColourRadio']:checked").val() == "if"){ 
-    
-    	// not empty -- condition
-        html += " if (" + $("#xColourIfCondition").attr("value") + ")";
-        
-    }else if($("input[name='xColourRadio']:checked").val() == "custom"){
-    
-        html += " " + $("#xColourCustomCondition").attr("value");
-        
-    }
-    
-    appendHiddenConfigDiv(elemID, html);
-}
-
-/*	Add a threshold configuration line.
- *	@Params: None.
- *	@Return: None.
- */
-function addThreshold(){
-    
-    var elemID = configCount++;
-    
-    var html = "Threshold :: " + $("#xThresholdType").attr("value") + " | " + $("#xThresholdSize").attr("value");
-    
-    appendUserConfigDiv(elemID, html);
-    
-    if($("#xThresholdType").attr("value") == "All"){
-
-        html = "threshold=" + $("#xThresholdSize").attr("value");
-    
-    }else{
-    
-        html = "threshold." + $("#xThresholdType").attr("value").toLowerCase() + "=" + $("#xThresholdSize").attr("value");
-    }
-
-    appendHiddenConfigDiv(elemID, html);
-}
 
 /*	Add a custom configuration line.
  *	@Params: None.
@@ -928,117 +976,7 @@ function addCustom(){
  */
 function addClustering(){
     
-    var elemID = configCount++;
-    
-    var userHTML = "";
-    var configHTML = "";
-    
-    userHTML = "Cluster :: " + $("#xClusteringType").attr("value");
-    
-    if($("#xClusteringType").attr("value") == "All"){
-    
-        configHTML = "cluster=";        
-    
-    }else{
-    
-        configHTML = "cluster." + $("#xClusteringType").attr("value").toLowerCase() + "=";    
-    
-    }
-    
-    if ($("input[name='xClusteringRadio']:checked").val() == "ip"){
-        
-        userHTML += " | IP | " + $("#xClusteringIPType").attr("value");
-	
-	if($("#xClusteringIPType").val() == "a"){
-	
-		configHTML += 'regex_replace("(\\\\d\\+)\\\\.\\\\d\\+")."/8"';
-		
-	}else if($("#xClusteringIPType").val() == "b"){
-	
-		configHTML += 'regex_replace("(\\\\d\\+\\\\.\\\\d\\+)\\\\.\\\\d\\+")."/16"';
-		
-	}else{
-	
-		configHTML += 'regex_replace("(\\\\d\\+\\\\.\\\\d\\+\\\\.\\\\d\\+)\\\\.\\\\d\\+")."/24"';
-		
-	}
-        
-        
-    }else if($("input[name='xClusteringRadio']:checked").val() == "exp"){
-        
-        userHTML += " | Condition | " + $("#xClusteringCondition").attr("value"); 
-        
-        configHTML += $("#xClusteringCondition").attr("value");
-    
-    }else{
-    	
-    	userHTML += " | Port | > " + $("#xClusteringPort").attr("value");
-	
-	configHTML += '\"> ' + $("#xClusteringPort").attr("value") + '\" if ($fields[2]>' + $("#xClusteringPort").attr("value") + ')';
-    }
-    
-    appendUserConfigDiv(elemID, userHTML);
-
-    appendHiddenConfigDiv(elemID, configHTML);
-    
-}
-
-/*	Add a size configuration line.
- *	@Params: None.
- *	@Return: None.
- */
-function addSize(){
-    
-    var elemID = configCount++;
-    
-    var userHTML = "Size :: " + $("#xSizeType").attr("value");
-    
-    var configHTML;
-
-    if($("#xSizeType").attr("value") == "All"){
-    
-        configHTML = "size=";
-    
-    }else{
-    
-        configHTML = "size." + $("#xSizeType").attr("value").toLowerCase() + "=";
-    
-    }
-    
-    
-    if ($("input[name='xSizeRadio']:checked").val() == "exp"){
-        
-        userHTML += " | Expression - " +  $("#xSizeCondition").attr("value");
-        
-        configHTML +=  $("#xSizeCondition").attr("value");
-    
-    }else{
-
-        if($("#xSizePreType").attr("value") == "num"){
-        
-            userHTML += " | Number of Occurences";
-            
-            configHTML += "$" + $("#xSizeType").attr("value").toLowerCase() + "Count{$" + $("#xSizeType").attr("value").toLowerCase() + "Name};";
-        
-        }else if($("#xSizePreType").attr("value") == "third"){
-        
-            userHTML += " | Third Data Column";
-            
-            configHTML += "$fields[2]"
-        
-        }else{
-        
-            userHTML += " | Fourth Data Column";
-            
-            configHTML += "$fields[3]"
-        
-        }
-    
-    }
-    
-    appendUserConfigDiv(elemID, userHTML);
-    
-    appendHiddenConfigDiv(elemID, configHTML);
+   
     
 }
 

@@ -193,11 +193,22 @@
                 <option>Target</option>
                 <option>All</option>
             </select>
+
+            <div class="alert alert-error validation-message hide" data-validation-for="#xThresholdType">
+                <span>
+                    Please, select rule target
+                </span>
+            </div>
         </div>
 
         <div class="field">
             <label class="label-bold">Threshold:</label>
             <input type="text" name="xThresholdSize" id="xThresholdSize"/>
+            <div class="alert alert-error validation-message hide" data-validation-for="#xThresholdSize">
+                <span>
+                    Please, enter threshold value
+                </span>
+            </div>
         </div>
 
         <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add omit threshold rule</a>
@@ -223,6 +234,12 @@
                 <option>Target</option>
                 <option>All</option>
             </select>
+
+             <div class="alert alert-error validation-message hide" data-validation-for="#xSizeType">
+                <span>
+                    Please, select rule target
+                </span>
+            </div>
         </div>
 
         <label class="label-bold">Condition</label>
@@ -233,6 +250,12 @@
                 <input type="text" name="xSizeCondition" id="xSizeCondition" class="long"/>
                 <span class="muted">e.g.: $fields[2]</span>
             </label>
+
+            <div class="alert alert-error validation-message hide" data-validation-for="#xSizeCondition">
+                <span>
+                    Please, enter size condition
+                </span>
+            </div>
             <br/>
         </div>
 
@@ -298,6 +321,12 @@
                 <option>All</option>
             </select>
            </label>
+
+            <div class="alert alert-error validation-message hide" data-validation-for="#xClusteringType">
+                <span>
+                    Please, enter select rule target
+                </span>
+            </div>
         </div>
 
         <div class="field"><label><u>Condition</u>:</label></div>
@@ -319,6 +348,11 @@
                           checked="checked"/>Port:<br/>
             <input type="text" name="xClusteringPort" id="xClusteringPort" value="2000"/>
                 <span class="muted">e.g.: 2000 -- would cluster all ports '> 2000'.</span>
+                <div class="alert alert-error validation-message hide" data-validation-for="#xClusteringPort">
+                    <span>
+                        Please, enter clustering port
+                    </span>
+                </div>
             </label>
 
 
@@ -329,6 +363,12 @@
             <input type="text" name="xClusteringCondition" id="xClusteringCondition" class="long"/>
              <span class="muted">e.g.: regex_replace("(\\d\+)")."/8" if ($fields[0]!="192.168.0.1")</span>
             </label>
+
+             <div class="alert alert-error validation-message hide" data-validation-for="#xClusteringCondition">
+                    <span>
+                        Please, enter clustering condition
+                    </span>
+            </div>
 
         </div>
 
