@@ -72,7 +72,24 @@ afterglow.form = {
 
         /** Validators for configuration modal windows */
         nodeColour : function(){
+                var isValid = true;
+                isValid = afterglow.form.validate('#xColourType', ['optionSelected']) && isValid;
+                isValid = afterglow.form.validate('#xColourHEX', ['notEmpty', 'htmlColor']) && isValid;
 
+                var conditionType = $('input:radio[name=xColourRadio]:checked').val();
+
+                switch(conditionType){
+                    case 'none':
+                        break;
+                    case 'if':
+                        isValid = afterglow.form.validate('#xColourIfCondition');
+                        break;
+                    case 'custom':
+                        isValid = afterglow.form.validate('#xColourCustomCondition');
+                        break;
+                }
+
+                return isValid;
         },
 
         nodeSize : function(){
@@ -113,6 +130,9 @@ afterglow.form = {
 
         if (!isValid){
             $('.validation-message[data-validation-for = "' + field  + '"]').show();
+            console.log('Field "' + field + '" is NOT valid'); 
+        } else {
+            console.log('Field "' + field + '" is valid'); 
         }
 
         return isValid;
@@ -173,10 +193,10 @@ afterglow.form = {
                     rawRule = rawRule + $("#xColourType").val().toLowerCase();
                 }
 
-                rawRule = rawRule + '"' + value + '"';
+                rawRule = rawRule + '="' + value + '"';
 
-                addRuleToConfig(rawRule);
-                addRuleToTable(rule + ' : ' + value, hasCondition? condition : 'none', target);
+                afterglow.form.addRuleToConfig(rawRule);
+                afterglow.form.addRuleToTable(rule + ' : ' + value, hasCondition? condition : 'none', target);
                 
                 return true;
             } else {
@@ -241,15 +261,36 @@ afterglow.form = {
 
     addRuleToConfig : function(rule){
 
+        var configLine = document.createElement("div");
+        configLine.id = "configLine" + $('#alreadyAddedHidden').children().length;
+        configLine.innerHTML = rule;
+        $("#alreadyAddedHidden").append(configLine);
+    },
+
+    handleAddRuleClick : function(originalHandler){
+        var handleFunction  = function(){
+            if (originalHandler()){
+                $(this).parent().modal('hide');
+            }
+        }
+
+        return handleFunction;
+
     },
 
     initModalWindows : function(){
-        $('#nodeColour').find('add-rule-button').click(afterglow.form.eventHandlers.addNodeColourRule);
-        $('#nodeSize').find('add-rule-button').click(afterglow.form.eventHandlers.addNodeSizeRule);
-        $('#nodeThreshold').find('add-rule-button').click(afterglow.form.eventHandlers.addNodeThresholdRule);
-        $('#nodeClustering').find('add-rule-button').click(afterglow.form.eventHandlers.addNodeClusteringRule);
-        $('#customLine').find('add-rule-button').click(afterglow.form.eventHandlers.addCustomLine);
-        $('#configGlobals').find('add-rule-button').click(afterglow.form.eventHandlers.addConfigGlobalsRule);
+        $('#nodeColour').find('.add-rule-button').click(afterglow.form.handleAddRuleClick(
+            afterglow.form.eventHandlers.addNodeColourRule));
+        $('#nodeSize').find('.add-rule-button').click(afterglow.form.handleAddRuleClick(
+            afterglow.form.eventHandlers.addNodeSizeRule));
+        $('#nodeThreshold').find('.add-rule-button').click(afterglow.form.handleAddRuleClick(
+            afterglow.form.eventHandlers.addNodeThresholdRule));
+        $('#nodeClustering').find('.add-rule-button').click(afterglow.form.handleAddRuleClick(
+            afterglow.form.eventHandlers.addNodeClusteringRule));
+        $('#customLine').find('.add-rule-button').click(afterglow.form.handleAddRuleClick(
+            afterglow.form.eventHandlers.addCustomLine));
+        $('#configGlobals').find('.add-rule-button').click(afterglow.form.handleAddRuleClick(
+            afterglow.form.eventHandlers.addConfigGlobalsRule));
     },
 
     init : function(){
@@ -266,6 +307,8 @@ afterglow.form = {
         $('#saveRegExDetails').children().change(function(){
             afterglow.form.clearValidation("#saveRegExDetails");
         });
+
+        afterglow.form.initModalWindows();
 
         $('#xRenderProcess').click(function(){
             afterglow.form.clearValidation('#renderMainForm');
@@ -301,11 +344,6 @@ var sumTargetSet = false;
 var afLogglySet = false;
 
 $(document).ready(function(){
-
-    // Invoke the colour pickers.
-    $('#id_textLabel').miniColors();
-    $('#xColourHEX').miniColors();
-	
 
 
     // Show the override box input (which is hidden otherwise) if the cookie
@@ -606,22 +644,6 @@ function appendUserConfigDiv(id, html){
     elem.innerHTML = html;
 
     document.getElementById("alreadyAdded").appendChild(elem);
-}
-
-/*	Append a raw configuration line (which is hidden) to the page..
- *	@Params: id - the count of this configuration (from the global counter).
- * 			html - the inner HTML content to append.
- *	@Return: None.
- */
-function appendHiddenConfigDiv(id, html){
-
-    var elem = document.createElement("div");
-    
-    elem.id = "configLine" + id;
-    
-    elem.innerHTML = html;
-
-    document.getElementById("alreadyAddedHidden").appendChild(elem);
 }
 
 /*	Remove a configuration line from the user's UI and the hidden field on the

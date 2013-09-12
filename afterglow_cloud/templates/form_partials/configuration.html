@@ -53,6 +53,8 @@
         </table>
     </div>
 
+    <div class="hide" id="alreadyAddedHidden"></div>
+
     <br/><br/>
 
 
@@ -127,7 +129,17 @@
         </div>
 
         <div class="field">
-            <label class="label-bold">Colour:</label> <input type="text" name="xColourHEX" id="xColourHEX"/>
+            <label class="label-bold">Colour:</label>
+
+            <div>
+                <input type="text" name="xColourHEX" id="xColourHEX"/>
+                <div class="alert alert-error validation-message hide" data-validation-for="#xColourHEX">
+                    <span>
+                        Please, enter colour in hexadecimal format(e.g. #000000)
+                    </span>
+                </div>
+            </div>
+            
         </div>
 
 
@@ -141,12 +153,25 @@
                     Condition:</label>
                 <input type="text" name="xColourIfCondition" id="xColourIfCondition" class="long"/>
                 <span class="muted">e.g.: $fields[2] =~ /^192\.168/</span>
+
+                <div class="alert alert-error validation-message hide" data-validation-for="#xColourIfCondition">
+                    <span>
+                        Please, enter IF condition
+                    </span>
+                </div>
             </div>
 
             <div class="field">
                 <label class="radio"><input type="radio" name="xColourRadio" id="xColourRadioCustom" value="custom"/>Custom
                     condition:</label>
                 <input type="text" name="xColourCustomCondition" id="xColourCustomCondition" class="long"/>
+
+
+                <div class="alert alert-error validation-message hide" data-validation-for="#xColourCustomCondition">
+                    <span>
+                        Please, enter custom condition
+                    </span>
+                </div>
             </div>
         </div>
 
