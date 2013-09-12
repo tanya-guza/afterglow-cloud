@@ -31,7 +31,7 @@
     <div id="alreadyLabel"> Added rules:</div>
 
     <div id="alreadyAdded">
-        <table class="table table-bordered">
+        <table class="table table-bordered" id="alreadyAddedRules">
             <thead>
             <tr>
                 <th>
@@ -45,6 +45,10 @@
                 </th>
                 <th>
                     Target
+                </th>
+
+                <th >
+                    Actions
                 </th>
             </tr>
             </thead>
@@ -384,6 +388,13 @@
 
         <input type="text" name="xCustomCondition" id="xCustomCondition" class="long"/>
         <span class="muted">e.g.: variable=@violation=("Backdoor Access");</span>
+
+        <div class="alert alert-error validation-message hide" data-validation-for="#xCustomCondition">
+                <span>
+                    Please, enter custom rule
+                </span>
+        </div>
+
         <br/>
         <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add custom config line</a>
     </fieldset>
