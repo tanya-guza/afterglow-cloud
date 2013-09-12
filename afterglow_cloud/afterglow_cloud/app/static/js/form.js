@@ -153,7 +153,31 @@ afterglow.form = {
         addNodeColourRule : function(){
             afterglow.form.clearValidation("#nodeColour");
             if (afterglow.form.validators.nodeColour()){
-                // Event handler code goes here
+                
+                var addColourWindow = $('#nodeColour');
+
+                var rawRule = "";
+                var rule = "Node Colour";
+                var hasCondition = addColourWindow.find('input:radio[name=xColourRadio]:checked').val() != 'none';
+                var condition = $("#xColourIfCondition").val();
+                var value = addColourWindow.find('#xColourHEX').val();
+                var target = addColourWindow.find('select#xColourType').val();
+
+                if(hasCondition){
+                    rawRule = rawRule + " if (" + condition + ")";
+                }
+
+                rawRule = rawRule + ' color';
+
+                if (target != 'All'){
+                    rawRule = rawRule + $("#xColourType").val().toLowerCase();
+                }
+
+                rawRule = rawRule + '"' + value + '"';
+
+                addRuleToConfig(rawRule);
+                addRuleToTable(rule + ' : ' + value, hasCondition? condition : 'none', target);
+                
                 return true;
             } else {
                 return false;
@@ -209,6 +233,14 @@ afterglow.form = {
                 return false;
             }
         }
+    },
+
+    addRuleToTable : function(rule, condition, target){
+
+    },
+
+    addRuleToConfig : function(rule){
+
     },
 
     initModalWindows : function(){
