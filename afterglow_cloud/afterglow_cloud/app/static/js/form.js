@@ -224,8 +224,7 @@ afterglow.form = {
 
                 rawRule = rawRule + '="' + value + '"';
 
-                afterglow.form.addRuleToConfig(rawRule);
-                afterglow.form.addRuleToTable(rule + ' : ' + value, hasCondition? condition : 'none', target);
+                afterglow.form.addRule(rawRule, rule + ' : ' + value, hasCondition? condition : 'none', target);
                 
                 return true;
             } else {
@@ -270,8 +269,7 @@ afterglow.form = {
 
                 }
 
-                afterglow.form.addRuleToConfig(rawRule);
-                afterglow.form.addRuleToTable(rule + ':' + value,'none', target);
+                afterglow.form.addRule(rawRule, rule + ':' + value,'none', target);
                 return true;
             } else {
                 return false;
@@ -283,22 +281,22 @@ afterglow.form = {
             if (afterglow.form.validators.nodeThreshold()){
                 
 
-                var raw_rule = "";
+                var rawRule = "";
                 var rule = "Node Threshold";
                 var target = $("#xThresholdType").val().toLowerCase();
                 var value = $("#xThresholdSize").val();
                 
                 if($("#xThresholdType").attr("value") == "all"){
 
-                    raw_rule = "threshold=" + value;
+                    rawRule = "threshold=" + value;
                 
                 }else{
                 
-                    raw_rule = "threshold." + target + "=" + value;
+                    rawRule = "threshold." + target + "=" + value;
                 }
 
-                afterglow.form.addRuleToConfig(raw_rule);
-                afterglow.form.addRuleToTable(rule + ' : ' + value, 'none', target);
+
+                afterglow.form.addRule(rawRule, rule + ' : ' + value, 'none', target);
                 return true;
             } else {
                 return false;
@@ -349,8 +347,7 @@ afterglow.form = {
                     rawRule += '\"> ' + value + '\" if ($fields[2]>' + value + ')';
                 }
                 
-                afterglow.form.addRuleToConfig(rawRule);
-                afterglow.form.addRuleToTable(rule + ' : ' + value, 'none', target);
+                afterglow.form.addRule(rawRule, rule + ' : ' + value, 'none', target);
                 return true;
             } else {
                 return false;
@@ -373,8 +370,7 @@ afterglow.form = {
                 var rule = "Custom";
                 var rawRule = $("#xCustomCondition").val();
     
-                afterglow.form.addRuleToConfig(rawRule);
-                afterglow.form.addRuleToTable(rule, rawRule, 'n/a');
+                afterglow.form.addRule(rawRule, rule, rawRule, 'n/a');
                 
                 return true;
             } else {
@@ -383,25 +379,60 @@ afterglow.form = {
         }
     },
 
-    addRuleToTable : function(rule, condition, target){
+    moveRuleUpHandler : function(){
+        var row = $(this).parents("tr:first");
+        var configLineId = row.attr('id').substring('added-rule-'.length);
+        var hiddenDiv = $('#added-hidden-rule-'  + configLineId);
+
+        row.insertBefore(row.prev());
+        hiddenDiv.insertBefore(hiddenDiv.prev());
+    },
+    moveRuleDownHandler : function(){
+        var row = $(this).parents("tr:first");
+        var configLineId = row.attr('id').substring('added-rule-'.length);
+        var hiddenDiv = $('#added-hidden-rule-'  + configLineId);
+
+        row.insertAfter(row.next());
+        hiddenDiv.insertBefore(hiddenDiv.next());
+    },
+    removeRuleHandler : function(){
+        var row = $(this).parents("tr:first");
+        var configLineId = row.attr('id').substring('added-rule-'.length);
+        var hiddenDiv = $('#added-hidden-rule-'  + configLineId);  
+
+        row.remove();
+        hiddenDiv.remove();
+    },
+
+    addRule : function(rawRule, rule, condition, target){
+        var uid = Math.random().toString(36).substr(2,9);
+        afterglow.form.addRuleToTable(rule, condition, target, uid);
+        afterglow.form.addRuleToConfig(rawRule, uid);
+    },
+
+    addRuleToTable : function(rule, condition, target, uid){
         var index = $('#alreadyAddedRules').find('tr').length + 1;
         var actions = '<p class="text-center"><a href="#" class="icon-arrow-up" title="Move rule up"></a>';
         actions += '<a href="#" class="icon-arrow-down"  title="Move rule down"></a>';
         actions += '<a href="#" class="icon-trash"  title="Remove rule"></a></p>';
-        var row = '<tr>' +
-                    '<td>' + index + '</td>' +
+        var rowString = '<tr id="added-rule-' + uid + '">' + 
                     '<td>' + rule + '</td>' +
                     '<td>' + condition + '</td>' +
                     '<td>' + target + '</td>' +
                     '<td class="text-center">' + actions + '</td>' +
                   '</tr>';
-        $('#alreadyAddedRules').first('tbody').append(row);
+
+        var row = $('#alreadyAddedRules').first('tbody').append(rowString);
+
+        row.find('a.icon-arrow-up').click(afterglow.form.moveRuleUpHandler);
+        row.find('a.icon-arrow-down').click(afterglow.form.moveRuleDownHandler);
+        row.find('a.icon-trash').click(afterglow.form.removeRuleHandler);
     },
 
-    addRuleToConfig : function(rule){
+    addRuleToConfig : function(rule, uid){
 
         var configLine = document.createElement("div");
-        configLine.id = "configLine" + $('#alreadyAddedHidden').children().length;
+        configLine.id = "added-hidden-rule-" + uid;
         configLine.innerHTML = rule;
         $("#alreadyAddedHidden").append(configLine);
     },
