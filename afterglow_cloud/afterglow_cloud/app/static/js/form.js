@@ -1,6 +1,11 @@
 
 afterglow.form = {
 
+    sumSourceSet : false,
+    sumEventSet : false, 
+    sumTargetSet : false,
+    maxNodeSizeSet : false,
+
     /** Map with validators. Validators are functions that validate
         user input taking into account current state of the UI.
      */
@@ -133,8 +138,8 @@ afterglow.form = {
             return isValid;
         },
 
-        configGlobals : function(){
-
+        maxNodeSize : function(){
+            return afterglow.form.validate('#xSizeMaxSize', ['notEmpty', 'isInteger']);
         },
 
         customLine : function(){
@@ -354,14 +359,73 @@ afterglow.form = {
             }
         },
 
-        addConfigGlobalsRule : function(){
-            afterglow.form.clearValidation("#configGlobals");
-            if (afterglow.form.validators.configGlobals()){
-                // Event handler code goes here
+        addMaxNodeSize : function(){
+            afterglow.form.clearValidation("#maxNodeSize");
+            if (afterglow.form.validators.maxNodeSize()){
+                
+                var rule = "Max Node Size(Global)";
+                var value = $("#xSizeMaxSize").val();
+                var rawRule = "maxnodesize=" + value;
+                var maxNodeSizeSet = afterglow.form.maxNodeSizeSet;
+
+                if (!maxNodeSizeSet){
+                    afterglow.form.maxNodeSizeSet = true;
+                    afterglow.form.addRule(rawRule, rule + ' : ' + value, 'none', 'n/a', function(){
+                       afterglow.form.maxNodeSizeSet = false;
+                       $('#addMaxNodeSizeBtn').prop('disabled', false);
+                    });
+
+                    $('#addMaxNodeSizeBtn').prop('disabled', true);
+                }
+    
                 return true;
             } else {
                 return false;
             }
+        },
+
+
+        addNodeSum : function(){    
+            var rawRule = "";
+            var rule = "Node Sum(Global)";
+            var target = $("#xSumType").val();
+
+            var sumSourceSet = afterglow.form.sumSourceSet;
+            var sumEventSet = afterglow.form.sumEventSet;
+            var sumTargetSet = afterglow.form.sumTargetSet;
+
+            //Check for individual sum setting (determine which one has been set) and
+            //proceed only if the one requested hasn't been already set.
+            if( target == "Source" && !sumSourceSet){
+                rawRule = "sum.source=1;";
+                afterglow.form.sumSourceSet = true;
+                afterglow.form.addRule(rawRule, rule, 'none', target, function(){
+                    afterglow.form.sumSourceSet = false;
+                    $('#addNodeSumBtn').prop('disabled', false);
+                });
+            }else if(target == "Event" && !sumEventSet){
+                rawRule = "sum.event=1;"
+                afterglow.form.sumEventSet = true;
+                afterglow.form.addRule(rawRule, rule, 'none', target, function(){
+                   afterglow.form.sumEventSet = false; 
+                   $('#addNodeSumBtn').prop('disabled', false);
+                });
+            }else if(target == "Target" && !sumTargetSet){
+                rawRule = "sum.target=1;";
+                afterglow.form.sumTargetSet = true;
+                afterglow.form.addRule(rawRule, rule, 'none', target, function(){
+                    afterglow.form.sumTargetSet = false;
+                    $('#addNodeSumBtn').prop('disabled', false);
+                });
+            }
+
+            if (afterglow.form.sumSourceSet && afterglow.form.sumTargetSet && afterglow.form.sumEventSet){
+                $('#addNodeSumBtn').prop('disabled', true);
+            }
+
+
+            return true;
+           
         },
 
         addCustomLine : function(){
@@ -404,13 +468,13 @@ afterglow.form = {
         hiddenDiv.remove();
     },
 
-    addRule : function(rawRule, rule, condition, target){
+    addRule : function(rawRule, rule, condition, target, deleteHandler){
         var uid = Math.random().toString(36).substr(2,9);
-        afterglow.form.addRuleToTable(rule, condition, target, uid);
+        afterglow.form.addRuleToTable(rule, condition, target, uid, deleteHandler);
         afterglow.form.addRuleToConfig(rawRule, uid);
     },
 
-    addRuleToTable : function(rule, condition, target, uid){
+    addRuleToTable : function(rule, condition, target, uid, deleteHandler){
         var index = $('#alreadyAddedRules').find('tr').length + 1;
         var actions = '<p class="text-center"><a href="#" class="icon-arrow-up" title="Move rule up"></a>';
         actions += '<a href="#" class="icon-arrow-down"  title="Move rule down"></a>';
@@ -427,6 +491,10 @@ afterglow.form = {
         row.find('a.icon-arrow-up').click(afterglow.form.moveRuleUpHandler);
         row.find('a.icon-arrow-down').click(afterglow.form.moveRuleDownHandler);
         row.find('a.icon-trash').click(afterglow.form.removeRuleHandler);
+
+        if (deleteHandler != 'undefined'){
+            row.find('a.icon-trash').click(deleteHandler);
+        }
     },
 
     addRuleToConfig : function(rule, uid){
@@ -459,8 +527,10 @@ afterglow.form = {
             afterglow.form.eventHandlers.addNodeClusteringRule));
         $('#customLine').find('.add-rule-button').click(afterglow.form.handleAddRuleClick(
             afterglow.form.eventHandlers.addCustomLine));
-        $('#configGlobals').find('.add-rule-button').click(afterglow.form.handleAddRuleClick(
-            afterglow.form.eventHandlers.addConfigGlobalsRule));
+        $('#nodeSum').find('.add-rule-button').click(afterglow.form.handleAddRuleClick(
+            afterglow.form.eventHandlers.addNodeSum));
+        $('#maxNodeSize').find('.add-rule-button').click(afterglow.form.handleAddRuleClick(
+            afterglow.form.eventHandlers.addMaxNodeSize));
     },
 
     init : function(){
@@ -503,126 +573,6 @@ $(function(){
 /* Globals */
 
 
-
-/*	Add a maxnodesize configuration line (a global setting).
- *	@Params: None.
- *	@Return: None.
- */
-function addMaxNodeSize(){
-
-    //Proceed only if not already set.
-    if (!maxNodeSizeSet){
-    
-        var html = "Max Node Size :: " +  $("#xSizeMaxSize").attr("value");
-        
-        var elemID = configCount++;        
-        
-        appendUserConfigDiv(elemID, html);
-        
-        html = "maxnodesize=" + $("#xSizeMaxSize").attr("value");
-        
-        var elem = document.createElement("div");
-        
-        elem.id = "maxNodeSizeFlag";
-        
-        elem.style.display = "none";
-        
-        document.getElementById("line" + elemID).appendChild(elem);
-        
-        appendHiddenConfigDiv(elemID, html);
-        
-        //Update the flag and disable further input (until removed).
-        maxNodeSizeSet = true;
-        
-        $("#xSizeMaxSize").prop('disabled', true);
-        
-        $("#xMaxNodeSizeButton").prop('disabled', true);
-    
-    }
-
-}
-
-/*	Add a sum configuration line (a global setting).
- *	@Params: None.
- *	@Return: None.
- */
-function addSum(){
-
-    var html;
-    
-    var elemID = configCount++;
-    
-    //Check for individual sum setting (determine which one has been set) and
-    //proceed only if the one requested hasn't been already set.
-    if($("#xSumType").attr("value") == "Source" && !sumSourceSet){
-    
-        html = "Sum Source :: True";
-        
-        appendUserConfigDiv(elemID, html);
-        
-        var elem = document.createElement("div");
-        
-        elem.id = "sumSourceFlag";
-        
-        elem.style.display = "none";
-        
-        document.getElementById("line" + elemID).appendChild(elem);
-        
-        html = "sum.source=1;"
-        
-        appendHiddenConfigDiv(elemID, html);
-        
-        $("#xSumOptionSource").prop('disabled', true);
-        
-        sumSourceSet = true;
-    
-    }else if($("#xSumType").attr("value") == "Event" && !sumEventSet){
-    
-        html = "Sum Event :: True";
-        
-        appendUserConfigDiv(elemID, html);
-        
-        var elem = document.createElement("div");
-        
-        elem.id = "sumEventFlag";
-        
-        elem.style.display = "none";
-        
-        document.getElementById("line" + elemID).appendChild(elem);
-        
-        html = "sum.event=1;"
-        
-        appendHiddenConfigDiv(elemID, html);
-        
-        $("#xSumOptionEvent").prop('disabled', true);
-        
-        sumEventSet = true;
-    
-    }else if(!sumTargetSet){
-    
-        html = "Sum Target :: True";
-        
-        appendUserConfigDiv(elemID, html);
-        
-        var elem = document.createElement("div");
-        
-        elem.id = "sumTargetFlag";
-        
-        elem.style.display = "none";
-        
-        document.getElementById("line" + elemID).appendChild(elem);
-        
-        html = "sum.target=1;"
-        
-        appendHiddenConfigDiv(elemID, html);
-        
-        $("#xSumOptionTarget").prop('disabled', true);
-        
-        sumTargetSet = true;
-    
-    }
-    
-}
 
 /*	Read the raw configuration data from the hidden field and populate the
  * 	textbox form element supplied by the view to process and send the request.

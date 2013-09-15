@@ -100,7 +100,8 @@
         <button  data-toggle="modal" data-target="#nodeSize" class="btn">Node size</button>
         <button  data-toggle="modal" data-target="#nodeThreshold" class="btn">Threshold Filter</button>
         <button  data-toggle="modal" data-target="#nodeClustering" class="btn">Clustering</button>
-        <button  data-toggle="modal" data-target="#configGlobals" class="btn">Global Rule</button>
+        <button  data-toggle="modal" data-target="#maxNodeSize" class="btn" id="addMaxNodeSizeBtn">Max Node Size (global)</button>
+        <button  data-toggle="modal" data-target="#nodeSum" class="btn" id="addNodeSumBtn">Node Sum(global)</button>
         <button  data-toggle="modal" data-target="#customLine" class="btn">Custom Line</button>
 
     </div>
@@ -273,23 +274,37 @@
         <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add size rule</a>
     </fieldset>
 
-    <fieldset id="configGlobals" class="modal custom-config-window hide fade">
+    <fieldset id="maxNodeSize" class="modal custom-config-window hide fade">
 
-        <h2>Global settings</h2>
-
-        <a href="#" class="tooltip configTip"
-           title="Global settings for the configurations. These settings once applied will be disabled to input again, since they can be applied only once. The input becomes active again if the respective configuration is removed above.">?</a>
-
+        <h2>Max node size</h2>
         <div class="field">
+            <div>
+                This is global rule and it can be added only one per configuration. Remove existing value
+                to provide new.
+            </div><br>
             <label class="label-bold">Max node size<br/>
                 <input type="text" name="xSizeMaxSize" id="xSizeMaxSize"/>
              </label>
-            <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add max node size</a>
+             <div class="alert alert-error validation-message hide" data-validation-for="#xSizeMaxSize">
+                <span>
+                    Please, enter max node size
+                </span>
+            </div>
         </div>
 
         <div class="cErrorConfig"><span id="maxNodeSizeE" class="cErrorMsg"></span></div>
+        <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add max node size</a>
+    </fieldset>
+
+    <fieldset id="nodeSum" class="modal custom-config-window hide fade">
+
+        <h2>Sum Nodes</h2>
 
         <div class="field">
+            <div>
+                This is global rule and it can be added only one per configuration. Remove existing value
+                to provide new.
+            </div> <br>
             <label class="label-bold">Sum Nodes<br/>
             <select name="xSumType" id="xSumType">
                 <option id="xSumOptionSource">Source</option>
@@ -297,10 +312,10 @@
                 <option id="xSumOptionTarget">Target</option>
             </select>
             </label>
-            <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add node summing rule</a>
+            
         </div>
 
-
+        <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add node summing rule</a>
     </fieldset>
 
     <div class="clear"></div>
