@@ -18,6 +18,7 @@ afterglow.form = {
                             
                 switch(logType){
                     case 'data':
+                        break;
                     case 'log':
                         isValid = afterglow.form
                             .validate('#id_dataFile') && isValid;
@@ -531,6 +532,30 @@ afterglow.form = {
             afterglow.form.eventHandlers.addNodeSum));
         $('#maxNodeSize').find('.add-rule-button').click(afterglow.form.handleAddRuleClick(
             afterglow.form.eventHandlers.addMaxNodeSize));
+    },
+
+    saveConfiguration : function(){
+
+        var value = "";
+        
+       
+        if($('input[name=xConfigType]:checked').val() == "manual"){
+        
+            value = $("#xManualConfig").attr("value");
+
+        }else if($('input[name=xConfigType]:checked').val() == "prev"){
+        
+            value = $("#xPropertyConfigPopulate").val();
+
+        }else{
+        
+            for (var i = 0; i <= $("#alreadyAddedHidden").children().length; i++){
+                value += $("#alreadyAddedHidden").children()[i].text() + "\n"; 
+            }
+            
+        }
+    
+        $("#id_propertyConfig").val(value);
     },
 
     init : function(){
