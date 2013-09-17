@@ -18,6 +18,8 @@ afterglow.form = {
                             
                 switch(logType){
                     case 'data':
+                        isValid = afterglow.form
+                            .validate('#id_dataFile') && isValid;
                         break;
                     case 'log':
                         isValid = afterglow.form
@@ -549,12 +551,13 @@ afterglow.form = {
 
         }else{
         
-            for (var i = 0; i <= $("#alreadyAddedHidden").children().length; i++){
-                value += $("#alreadyAddedHidden").children()[i].text() + "\n"; 
+            for (var i = 0; i < $("#alreadyAddedHidden").children().length; i++){
+                value += $($("#alreadyAddedHidden").children()[i]).text() + "\n"; 
             }
             
         }
-    
+        
+        console.log(value);
         $("#id_propertyConfig").val(value);
     },
 
@@ -585,6 +588,10 @@ afterglow.form = {
                 }
             }
 
+            if (isValid){
+                afterglow.form.saveConfiguration();
+            }
+
             return isValid;
 
         });
@@ -594,212 +601,3 @@ afterglow.form = {
 $(function(){
     afterglow.form.init();
 });
-
-/* Globals */
-
-
-
-/*	Read the raw configuration data from the hidden field and populate the
- * 	textbox form element supplied by the view to process and send the request.
- *	@Params: None.
- *	@Return: None.
- */
-function populateProperty(){
-
-    var value = "";
-    
-    //Check if the configuration tpye is manual or custom.
-    if($('input[name=xConfigType]:checked').val() == "manual"){
-    
-        value = $("#xManualConfig").attr("value");
-	
-    }else if($('input[name=xConfigType]:checked').val() == "prev"){
-    
-    	value = $("#xPropertyConfigPopulate").val();
-	
-    }else{
-    
-        for (var i = 0; i <= configCount; i++){
-        
-            if ($("#configLine" + i).length > 0){ //if exists.
-                value += $("#configLine" + i).text() + "\n"; 
-            }
-        }
-        
-    }
-    
-    document.getElementById("id_propertyConfig").value = value;
-}
-
-/*	Change the CSS style property 'display' of the parent element of 'id' to
- *	'block' (show) itself.
- *	@Params: None.
- *	@Return: None.
- */
-function showParent(id){
-
-	$("#" + id).parent().attr('style','display: block !important');
-
-}
-
-/*	Change the CSS style property 'display' of the parent element of 'id' to
- *	'none' (hide) itself.
- *	@Params: None.
- *	@Return: None.
- */
-function hideParent(id){
-
-	$("#" + id).parent().attr('style','display: none !important');
-
-}
-
-/*	Remove every validation message (everything that is present) from the page.
- *	@Params: None.
- *	@Return: None.
- */
-function resetValidations(){
-
-	var ids = new Array("dataFileE", "overrideEdgeE", "maxLinesE", "skipLinesE", "omitThresholdE", "sourceFanOutE", "eventFanOutE");
-
-	for (var i = 0; i < ids.length; i++){
-		hideParent(ids[i]);
-	}
-}
-
-/*	Validate the data-file form input on the page and return the validation
- * 	status.
- *	@Params: None.
- *	@Return: true if valid, false otherwise.
- */
-function validateDataFile(){
-
-	if(!$("#id_dataFile").attr("value")){
-
-		$("#dataFileE").html("Please choose a file.");
-
-		showParent("dataFileE");
-
-		return false;
-
-	}
-    
-    return true;
-
-}
-
-/*	Validate the edge-length form input on the page and return the validation
- * 	status.
- *	@Params: None.
- *	@Return: true if valid, false otherwise.
- */
-function validateEdgeLength(){
-
-	if($("#id_overrideEdge").is(":checked")){
-
-		var condition = /^[0-9]+(\.[0-9]{1,2})?$/;
-
-		if(!condition.test($("#id_overrideEdgeLength").attr("value"))){
-
-			$("#overrideEdgeE").html("Please enter a positive decimal value. Maximum of two decimal places.");
-	
-			showParent("overrideEdgeE");
-
-			$('#mainSettings').show();
-			
-			return false;
-		}
-
-	}
-	
-	return true;
-
-}
-
-/*	Validate all the integer form inputs on the page and return the validation
- * 	status.
- *	@Params: None.
- *	@Return: true if all valid, false otherwise.
- */
-function validateAdvancedIntegers(){
-
-	var flag = true;
-
-	var posInteger = /^[0-9]+$/;
-
-	var intFields = new Array("skipLines", "omitThreshold", "sourceFanOut", "eventFanOut");
-
-	if(!posInteger.test($("#id_maxLines").attr("value"))){
-
-		$("#maxLinesE").html("Please enter a valid decimal.");
-
-		showParent("maxLinesE");
-
-		flag = flag = false;
-
-	}else if(parseInt($("#id_maxLines").attr("value")) < 1 || parseInt($("#id_maxLines").attr("value")) > 999999){
-	
-		$("#maxLinesE").html("Please enter a value between 1 - 999999");
-
-		showParent("maxLinesE");
-
-		//Boolean AND.
-		flag = flag && false;
-
-	}
-
-	for (var i = 0; i < intFields.length; i++){
-
-		if(!posInteger.test($("#id_" + intFields[i]).attr("value"))){
-
-			$("#" + intFields[i] +"E").html("Please enter a valid decimal.");		
-
-			showParent(intFields[i] + "E");
-	
-			flag = flag && false;
-
-		}
-	}
-	
-	if(!flag){
-		$('#advanced').show();
-	}
-	
-	return flag;
-}
-
-/*	Validate integer inputs on the configuration panel.
- *	@Params: what - specifies which input to test; valid values are "threshold"
- 		and "maxNodeSize".
- *	@Return: true if valid, false otherwise.
- */
-function validateConfig(what){
-
-	var posInteger = /^[0-9]+$/;
-
-	hideParent(what + "E");
-
-	if(what == "maxNodeSize"){
-
-		if(!posInteger.test($("#xSizeMaxSize").attr("value"))){
-
-			$("#" + what +"E").html("Please enter a valid decimal.");		
-
-			showParent(what + "E");
-
-			return false;
-		}
-
-	}else{
-
-		if(!posInteger.test($("#xThresholdSize").attr("value"))){
-
-			$("#" + what +"E").html("Please enter a valid decimal.");		
-
-			showParent(what + "E");
-
-			return false;
-		}	
-	}
-
-	return true;
-}
