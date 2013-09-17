@@ -104,6 +104,10 @@ afterglow.rendering = {
             .attr("class", "nodeFigure")
             .attr("r", function (d) {
                 return 5 + node_stats[d._id].totalConnectivity * 0.3;
+            })
+            .attr("fill", function(d) {
+                console.log('rgb(' + d.color.slice(1,-1) + ')');
+                return 'rgb(' + d.color.slice(1,-1) + ')';
             });
 
 
