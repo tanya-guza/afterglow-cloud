@@ -166,7 +166,12 @@ afterglow.form = {
         }
 
         if (!isValid){
-            $('.validation-message[data-validation-for = "' + field  + '"]').show();
+            var invalidField = $('.validation-message[data-validation-for = "' + field  + '"]')
+            var container = $('html,body');
+            invalidField.show();
+            $(document).scrollTop(
+                invalidField.parent().parent().offset().top - $(invalidField).height()
+            );
             console.log('Field "' + field + '" is NOT valid'); 
         } else {
             console.log('Field "' + field + '" is valid'); 
