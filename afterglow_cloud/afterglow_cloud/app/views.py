@@ -34,6 +34,12 @@ def index(request):
     return render_to_response('index.html', locals(),
                               context_instance=RequestContext(request))
 
+def renderGraph(request, json_hash):
+    print(json_hash)
+    request.session['requestID'] = json_hash
+    return render_to_response('render.html', {"requestID" : json_hash},
+                              context_instance=RequestContext(request))
+
 
 def processForm(request):
     '''
@@ -307,8 +313,7 @@ def _render(request, parsedData, loggly=False, logglyData=None):
         request.session['requestID'] = requestID
 
         #Construct a rendered graph response.
-        response = render_to_response('render.html', locals(),
-                                      context_instance=RequestContext(request))
+        response = redirect('/render/' + requestID)
 
         #Check if the user wanted to save/create a cookie to save their
         #settings for future use.
