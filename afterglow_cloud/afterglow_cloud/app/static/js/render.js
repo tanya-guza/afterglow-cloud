@@ -95,7 +95,12 @@ afterglow.rendering = {
                 .attr("dy", ".35em")
                 .attr("class", "nodeLabel")
                 .text(function (d) {
-                    return d._label;
+                    var labelText =  d._label;
+                    console.log(d.occurences);
+                    if (d.occurences != undefined){
+                        labelText = labelText +  '(' + d.occurences + ')';
+                    }
+                    return labelText;
                 });
         }
 
