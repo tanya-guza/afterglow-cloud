@@ -97,8 +97,8 @@ afterglow.rendering = {
                 .text(function (d) {
                     var labelText =  d._label;
                     console.log(d.occurences);
-                    if (d.occurences != undefined){
-                        labelText = labelText +  '(' + d.occurences + ')';
+                    if (d.occurrences != undefined){
+                        labelText = labelText +  '(' + d.occurrences + ')';
                     }
                     return labelText;
                 });
