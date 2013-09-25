@@ -33,7 +33,6 @@ afterglow.form = {
 
                                     if($('#id_saveRegEx').is(':checked')){
                                         isValid = afterglow.form.validate('#id_saveRegExName') && isValid;
-                                        isValid = afterglow.form.validate('#id_saveRegExDescription') && isValid;
                                     }
                                 break;
                             case '2':
