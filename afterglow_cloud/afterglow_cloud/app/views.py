@@ -248,7 +248,7 @@ def _render(request, parsedData, loggly=False, logglyData=None):
         # If the user submitted a custom regex expression and indicated to
         # save it; insert the data into the database and alert an administrator
         # through email.
-        if not retVal and POSTdata['regExType'] == '1' and "saveRegEx" in POSTdata:
+        if POSTdata['regExType'] == '1' and "saveRegEx" in POSTdata:
 
             expression = Expressions(name=POSTdata['saveRegExName'], \
                                      description=POSTdata['saveRegExDescription'], \
@@ -267,8 +267,9 @@ def _render(request, parsedData, loggly=False, logglyData=None):
             try:
                 send_mail("Expression submit @AfterGlow", message,
                           from_email, settings.AF_TO_EMAILS)
-            except BadHeaderError:
-                return HttpResponse('Invalid header found. Please try again.')
+            except:
+                pass
+                #return HttpResponse('Invalid header found. Please try again.')
 
 
     else:
