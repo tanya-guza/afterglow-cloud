@@ -117,12 +117,12 @@
 
             <div class="field">
                 <label>Description:</label>
-                {{ form.saveRegExDescription }} <a href="#" class="tooltip"
+                {{ form.saveRegExDescription | set_data:"min-length:10" }} <a href="#" class="tooltip"
                                                    title="Enter a description for your expression.">?</a>
                 {{ form.saveRegExDescription.errors }}
                  <div class="alert alert-error validation-message hide" data-validation-for="#id_saveRegExDescription">
                     <span>
-                        Please, enter name for custom regular expression
+                        Please, enter description for custom regular expression(at least 10 characters) or leave this field blank
                     </span>
                 </div>
             </div>

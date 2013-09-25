@@ -33,6 +33,7 @@ afterglow.form = {
 
                                     if($('#id_saveRegEx').is(':checked')){
                                         isValid = afterglow.form.validate('#id_saveRegExName') && isValid;
+                                        isValid = afterglow.form.validate('#id_saveRegExDescription', ['hasSpecifiedLength']) && isValid;
                                     }
                                 break;
                             case '2':
@@ -199,6 +200,25 @@ afterglow.form = {
         isInteger : function(field){
             var value = $(field).val();
             return /^[0-9]+$/.test(value);
+        },
+        hasSpecifiedLength : function(field){
+            var minLength = $(field).data('min-length');
+            var maxLength = $(field).data('max-length');
+            var value = $(field).val();
+            var valid = true;
+
+            if (value != undefined && value.length != 0){
+                if (minLength != undefined){
+                    valid = valid && value.length >= minLength;
+                }
+
+                if (maxLength != undefined){
+                    valid = valid && value.length < maxLength;
+                }
+            }
+
+            return valid;
+
         }
 
     },
