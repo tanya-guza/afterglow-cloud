@@ -567,6 +567,10 @@ afterglow.form = {
     },
 
     init : function(){
+
+        $('.close-modal').click(function(){
+            $(this).closest('.custom-config-window').modal('hide');
+        });
         
         /** Input sources validation reset*/
         $('#inputSources').children().change(function(){

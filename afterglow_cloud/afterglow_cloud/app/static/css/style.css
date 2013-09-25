@@ -39,3 +39,11 @@ svg#renderViewport{
 .label-bold{
     font-weight: bold;
 }
+
+.close-panel{
+    text-align: right;
+}
+
+.close-modal{
+    cursor: pointer;
+}
