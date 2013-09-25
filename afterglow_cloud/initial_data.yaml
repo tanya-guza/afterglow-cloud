@@ -1,0 +1,20 @@
+- model: app.expressions
+  pk: 1
+  fields:
+    name: Source(IP or hostname) -> Destination IP
+    description: Source(IP or hostname) -> Destination IP
+    regex: ^(.*?) .* ".* (.*?) .*".*$
+
+- model: app.expressions
+  pk: 2
+  fields:
+    name: Source(IP or hostname), URL, Status code
+    description: Source(IP or hostname), URL, Status code
+    regex: ^(.*?) .* ".* (.*?) .*" (\d+) .*$
+
+- model: app.expressions
+  pk: 3
+  fields:
+    name: source(IP or hostname), number of bytes
+    description: Source(IP or hostname), number of bytes
+    regex: ^(.*?) .* (\d+) .*$
