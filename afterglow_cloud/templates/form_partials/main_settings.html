@@ -30,13 +30,6 @@
 
         </fieldset>
 
-        <label class="checkbox" title="Override default edge length">
-            {{ form.overrideEdge.errors }}
-
-            {{ form.overrideEdge  | set_data:"toggle:visibility"| set_data:"target:#overrideEdgeLengthInput"}}
-            Override default edge length
-        </label>
-
         <label class="input-medium" title="HEX colour for the text labels used on the graph.">
 
             {{ form.textLabel.errors }}

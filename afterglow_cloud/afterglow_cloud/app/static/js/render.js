@@ -89,20 +89,20 @@ afterglow.rendering = {
             .attr("class", "node")
             .call(force.drag);
 
-        if (display_labels){
-            node.append("text")
-                .attr("dx", 12)
-                .attr("dy", ".35em")
-                .attr("class", "nodeLabel")
-                .text(function (d) {
-                    var labelText =  d._label;
-                    console.log(d.occurences);
-                    if (d.occurrences != undefined){
-                        labelText = labelText +  '(' + d.occurrences + ')';
-                    }
-                    return labelText;
-                });
-        }
+        
+        node.append("text")
+            .attr("dx", 12)
+            .attr("dy", ".35em")
+            .attr("class", "nodeLabel")
+            .text(function (d) {
+                var labelText =  d._label;
+                console.log(d.occurences);
+                if (d.occurrences != undefined){
+                    labelText = labelText +  '(' + d.occurrences + ')';
+                }
+                return labelText;
+            });
+       
 
 
        var nodeCircle = node.append("circle")
@@ -204,6 +204,15 @@ afterglow.rendering = {
                                             .off('mouseenter')
                                             .off('mouseleave');
                                 }
+                        });
+
+                        $('.node').mouseover(function(){
+                            $(this).find('.nodeLabel').attr('opacity', '100');
+                        });
+
+                        $('.node').mouseleave(function(){
+                            var opacity = $(this).is(':checked') ? '100' : '0';
+                            $(this).find('.nodeLabel').attr('opacity', opacity);
                         });
 
                         $('#resetViewport').click(function(){
