@@ -247,14 +247,13 @@ afterglow.form = {
                     rawRule = rawRule + " if (" + condition + ")";
                 }
 
-                rawRule = rawRule + ' color';
+                rawRule = rawRule + 'color';
 
                 if (target != 'All'){
-                    rawRule = rawRule + $("#xColourType").val().toLowerCase();
+                    rawRule = rawRule + '.' + $("#xColourType").val().toLowerCase();
                 }
 
                 rawRule = rawRule + '="' + value + '"';
-
                 afterglow.form.addRule(rawRule, rule + ' : ' + value, hasCondition? condition : 'none', target);
                 
                 return true;
