@@ -524,9 +524,6 @@ def _buildParameters(options):
     if options['splitMode'] is not 0:
         param += "-p " + options['splitMode'] + " "
 
-    if 'overrideEdge' in options:
-        param += "-e " + options['overrideEdgeLength'] + " "
-
     param += "-x \"" + options['textLabel'] + "\" "
 
     if options['skipLines'] is not 0:

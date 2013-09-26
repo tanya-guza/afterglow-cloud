@@ -27,11 +27,6 @@ class renderForm(forms.Form):
                         (3, "One predicate node per unique source/target node")]
     splitMode = forms.ChoiceField(splitModeChoices)
     
-    #Flag: 'e' Render with 'overrideEdgeLength' length.
-    overrideEdge = forms.BooleanField(required=False)
-    overrideEdgeLength = forms.DecimalField(min_value = 0, decimal_places = 2, 
-                                            initial=0)
-    
     #Flag: '-x' Colour for the text labels used in the graph. Feild is validated
     #by the method clean_textLabel() below.
     textLabel = forms.CharField(min_length = 7, max_length = 7, 

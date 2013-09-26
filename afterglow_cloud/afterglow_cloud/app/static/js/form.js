@@ -57,8 +57,7 @@ afterglow.form = {
             mainSettings : function(){
                 afterglow.form.clearValidation("#mainSettings");
                 var isValid = true;
-                isValid = afterglow.form.validate('#id_overrideEdgeLength') && isValid;
-                isValid = afterglow.form.validate('#id_textLabel', ['notEmpty', 'htmlColor']) && isValid;
+                isValid = afterglow.form.validate('#id_textLabel', ['notEmpty']) && isValid;
 
                 return isValid;
             },
@@ -82,7 +81,7 @@ afterglow.form = {
         nodeColour : function(){
                 var isValid = true;
                 isValid = afterglow.form.validate('#xColourType', ['optionSelected']) && isValid;
-                isValid = afterglow.form.validate('#xColourHEX', ['notEmpty', 'htmlColor']) && isValid;
+                isValid = afterglow.form.validate('#xColourHEX', ['notEmpty']) && isValid;
 
                 var conditionType = $('input:radio[name=xColourRadio]:checked').val();
 

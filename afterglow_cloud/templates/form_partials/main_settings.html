@@ -37,17 +37,6 @@
             Override default edge length
         </label>
 
-        <label class="checkbox hide" title="Override default edge length" id="overrideEdgeLengthInput">
-            {{ form.overrideEdgeLength.errors }}
-            {{ form.overrideEdgeLength }}
-
-            <div class="alert alert-error validation-message hide" data-validation-for="#id_overrideEdgeLength">
-                <span>
-                    Please, enter length as integer number or 0 to use default settings
-                </span>
-            </div>
-        </label>
-
         <label class="input-medium" title="HEX colour for the text labels used on the graph.">
 
             {{ form.textLabel.errors }}
