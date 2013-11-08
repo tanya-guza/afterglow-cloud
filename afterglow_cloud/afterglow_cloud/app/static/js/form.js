@@ -243,10 +243,6 @@ afterglow.form = {
                 var value = addColourWindow.find('#xColourHEX').val();
                 var target = addColourWindow.find('select#xColourType').val();
 
-                if(hasCondition){
-                    rawRule = rawRule + " if (" + condition + ")";
-                }
-
                 rawRule = rawRule + 'color';
 
                 if (target != 'All'){
@@ -254,6 +250,10 @@ afterglow.form = {
                 }
 
                 rawRule = rawRule + '="' + value + '"';
+
+                if(hasCondition){
+                    rawRule = rawRule + " if (" + condition + ") ";
+                }
                 afterglow.form.addRule(rawRule, rule + ' : ' + value, hasCondition? condition : 'none', target);
                 
                 return true;
