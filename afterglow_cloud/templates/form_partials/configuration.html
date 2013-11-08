@@ -1,421 +1,434 @@
+<div class="accordion-group">
+<div class="accordion-heading">
+    </i><a href="#configurationCollapse" class="accordion-toggle" data-toggle="collapse"
+                                      data-parent="#settings-accordion"><h3><i class="icon-arrow-down"></i>Configuration</h3></a>
+</div>
+
+<div class="accordion-body collapse" id="configurationCollapse">
 <fieldset>
-    <a href="#">
-        <legend data-toggle="collapse" data-target="#configuration">
-            <i class="icon-arrow-down"></i>
-            Configuration
-        </legend>
-    </a>
+<fieldset id="configuration">
 
-    <fieldset id="configuration">
-
-    <fieldset
-            title="Configuration type">
+<fieldset
+        title="Configuration type">
 
 
+    <label class="radio inline">
+        <input type="radio" name="xConfigType" checked="checked" value="custom" data-toggle="visibility"
+               data-target="#customConfig"/>Custom
+    </label>
+
+    <label class="radio inline">
+        <input type="radio" name="xConfigType" value="manual" data-toggle="visibility" data-target="#manualConfig"/>Manual
+    </label>
+    {% if propertyConfigPopulate %}
         <label class="radio inline">
-            <input type="radio" name="xConfigType" checked="checked" value="custom" data-toggle="visibility"
-                   data-target="#customConfig"/>Custom
+            <input type="radio" name="xConfigType" value="prev" data-toggle="visibility"
+                   data-target="#lastUsedConfig"/>Last used configuration
         </label>
 
-        <label class="radio inline">
-            <input type="radio" name="xConfigType" value="manual" data-toggle="visibility" data-target="#manualConfig"/>Manual
-        </label>
-        {% if propertyConfigPopulate %}
-            <label class="radio inline">
-                <input type="radio" name="xConfigType" value="prev" data-toggle="visibility"
-                       data-target="#lastUsedConfig"/>Last used configuration
-            </label>
-
-        {% endif %}
-    </fieldset>
-    <br>
+    {% endif %}
+</fieldset>
+<br>
 
 
-    <div id="alreadyLabel"> Added rules:</div>
+<div id="alreadyLabel"> Added rules:</div>
 
-    <div id="alreadyAdded">
-        <table class="table table-bordered" id="alreadyAddedRules">
-            <thead>
-            <tr>
-                <th>
-                    Rule
-                </th>
-                <th>
-                    Condition
-                </th>
-                <th>
-                    Target
-                </th>
+<div id="alreadyAdded">
+    <table class="table table-bordered" id="alreadyAddedRules">
+        <thead>
+        <tr>
+            <th>
+                Rule
+            </th>
+            <th>
+                Condition
+            </th>
+            <th>
+                Target
+            </th>
 
-                <th >
-                    Actions
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
+            <th>
+                Actions
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
 
-    <div class="hide" id="alreadyAddedHidden"></div>
+<div class="hide" id="alreadyAddedHidden"></div>
 
-    <br/><br/>
+<br/><br/>
 
 
-    {{ form.propertyConfig }}
+{{ form.propertyConfig }}
 
-    {% comment %}    <br/><br/>
+{% comment %}    <br/><br/>
 
     <br/><br/>{% endcomment %}
 
-    <fieldset id="manualConfig" class="hide">
+<fieldset id="manualConfig" class="hide">
 
-        <textarea rows="10" cols="50" name="xManualConfig" id="xManualConfig"></textarea>
-        <br/><br/>
-        {% if propertyConfigPopulate %}
+    <textarea rows="10" cols="50" name="xManualConfig" id="xManualConfig"></textarea>
+    <br/><br/>
+    {% if propertyConfigPopulate %}
 
-            <span class="smallText">
+        <span class="smallText">
 						Your previously used configuration setting is saved. Importing it to edit will replace any configuration added above.
 					</span><br/><br/>
-            <a href="#" id="importLastUsedConfig">Import last used configuration</a>
+        <a href="#" id="importLastUsedConfig">Import last used configuration</a>
 
-        {% endif %}
+    {% endif %}
 
-    </fieldset>
+</fieldset>
 
-    <fieldset id="lastUsedConfig" class="hide">
+<fieldset id="lastUsedConfig" class="hide">
 
-        Your previously used configuration setting is saved. The following will be used: <br/>
-        <span class="smallText">(You can alternatively import this configuration and manually edit it under "Manual" mode)</span>
+    Your previously used configuration setting is saved. The following will be used: <br/>
+    <span class="smallText">(You can alternatively import this configuration and manually edit it under "Manual" mode)</span>
 
-        <br/><br/>
+    <br/><br/>
 
-        <textarea rows="15" cols="75" name="xPropertyConfigDummy" disabled="true">{{ propertyConfig }}</textarea>
+    <textarea rows="15" cols="75" name="xPropertyConfigDummy" disabled="true">{{ propertyConfig }}</textarea>
 
-    </fieldset>
+</fieldset>
 
-    <fieldset id="customConfig">
-
-
-    <label class="label-bold">Add rule</label>
-    <div class="btn-group">
-        <button  data-toggle="modal" data-target="#nodeColour" class="btn">Node Color</button>
-        <button  data-toggle="modal" data-target="#nodeSize" class="btn">Node size</button>
-        <button  data-toggle="modal" data-target="#nodeThreshold" class="btn">Threshold Filter</button>
-        <button  data-toggle="modal" data-target="#nodeClustering" class="btn">Clustering</button>
-        <button  data-toggle="modal" data-target="#maxNodeSize" class="btn" id="addMaxNodeSizeBtn">Max Node Size (global)</button>
-        <button  data-toggle="modal" data-target="#nodeSum" class="btn" id="addNodeSumBtn">Node Sum(global)</button>
-        <button  data-toggle="modal" data-target="#customLine" class="btn">Custom Line</button>
-
-    </div>
+<fieldset id="customConfig">
 
 
-    <fieldset id="nodeColour" class="modal custom-config-window hide fade" data-keyboard="true"  tabindex="-1">
-        <div class="close-panel"><i class="icon-remove close-modal">&nbsp;</i></div>
-        <h2>Add Color</h2>
+<label class="label-bold">Add rule</label>
+
+<div class="btn-group">
+    <button data-toggle="modal" data-target="#nodeColour" class="btn">Node Color</button>
+    <button data-toggle="modal" data-target="#nodeSize" class="btn">Node size</button>
+    <button data-toggle="modal" data-target="#nodeThreshold" class="btn">Threshold Filter</button>
+    <button data-toggle="modal" data-target="#nodeClustering" class="btn">Clustering</button>
+    <button data-toggle="modal" data-target="#maxNodeSize" class="btn" id="addMaxNodeSizeBtn">Max Node Size (global)
+    </button>
+    <button data-toggle="modal" data-target="#nodeSum" class="btn" id="addNodeSumBtn">Node Sum(global)</button>
+    <button data-toggle="modal" data-target="#customLine" class="btn">Custom Line</button>
+
+</div>
+
+
+<fieldset id="nodeColour" class="modal custom-config-window hide fade" data-keyboard="true" tabindex="-1">
+    <div class="close-panel"><i class="icon-remove close-modal">&nbsp;</i></div>
+    <h2>Add Color</h2>
             <span>
                 This rule type allows assigning different colors to nodes and edges according to the
                 specified condition
             </span>
-        <br>
-        <hr>
-        <a href="#" class="tooltip configTip"
-           title="Specify a colour configuration for each node type with optional conditions. Adding an 'IF' condition wraps a perl 'if' expression around the condition, while a 'custom' condition can be any perl condition.">?</a>
+    <br>
+    <hr>
+    <a href="#" class="tooltip configTip"
+       title="Specify a colour configuration for each node type with optional conditions. Adding an 'IF' condition wraps a perl 'if' expression around the condition, while a 'custom' condition can be any perl condition.">?</a>
 
-        <div class="field">
-            <label class="label-bold">Object:</label>
-            <select name="xColourType" id="xColourType">
-                <option>Source</option>
-                <option>Event</option>
-                <option>Target</option>
-                <option>Edge</option>
-                <option>All Nodes</option>
-            </select>
-        </div>
+    <div class="field">
+        <label class="label-bold">Object:</label>
+        <select name="xColourType" id="xColourType">
+            <option>Source</option>
+            <option>Event</option>
+            <option>Target</option>
+            <option>Edge</option>
+            <option>All Nodes</option>
+        </select>
+    </div>
 
-        <div class="field">
-            <label class="label-bold">Color:</label>
+    <div class="field">
+        <label class="label-bold">Color:</label>
 
-            <div>
-                <input type="text" name="xColourHEX" id="xColourHEX"/>
-                <div class="alert alert-error validation-message hide" data-validation-for="#xColourHEX">
+        <div>
+            <input type="text" name="xColourHEX" id="xColourHEX"/>
+
+            <div class="alert alert-error validation-message hide" data-validation-for="#xColourHEX">
                     <span>
                         Please, enter colour in hexadecimal format(e.g. #000000)
                     </span>
-                </div>
             </div>
-            
         </div>
 
+    </div>
 
-        <div class="field"><label class="label-bold">Condition:</label>
-            <label class="radio">
-                <input type="radio" name="xColourRadio" id="xColourRadioNone" checked="checked"
-                       value="none"/>None</label>
 
-            <div class="field">
-                <label class="radio"><input type="radio" name="xColourRadio" id="xColourRadioIf" value="if"/>IF
-                    Condition:</label>
-                <input type="text" name="xColourIfCondition" id="xColourIfCondition" class="long"/>
-                <span class="muted">e.g.: $fields[2] =~ /^192\.168/</span>
+    <div class="field"><label class="label-bold">Condition:</label>
+        <label class="radio">
+            <input type="radio" name="xColourRadio" id="xColourRadioNone" checked="checked"
+                   value="none"/>None</label>
 
-                <div class="alert alert-error validation-message hide" data-validation-for="#xColourIfCondition">
+        <div class="field">
+            <label class="radio"><input type="radio" name="xColourRadio" id="xColourRadioIf" value="if"/>IF
+                Condition:</label>
+            <input type="text" name="xColourIfCondition" id="xColourIfCondition" class="long"/>
+            <span class="muted">e.g.: $fields[2] =~ /^192\.168/</span>
+
+            <div class="alert alert-error validation-message hide" data-validation-for="#xColourIfCondition">
                     <span>
                         Please, enter IF condition
                     </span>
-                </div>
             </div>
+        </div>
 
-            <div class="field">
-                <label class="radio"><input type="radio" name="xColourRadio" id="xColourRadioCustom" value="custom"/>Custom
-                    condition:</label>
-                <input type="text" name="xColourCustomCondition" id="xColourCustomCondition" class="long"/>
+        <div class="field">
+            <label class="radio"><input type="radio" name="xColourRadio" id="xColourRadioCustom" value="custom"/>Custom
+                condition:</label>
+            <input type="text" name="xColourCustomCondition" id="xColourCustomCondition" class="long"/>
 
 
-                <div class="alert alert-error validation-message hide" data-validation-for="#xColourCustomCondition">
+            <div class="alert alert-error validation-message hide" data-validation-for="#xColourCustomCondition">
                     <span>
                         Please, enter custom condition
                     </span>
-                </div>
             </div>
         </div>
+    </div>
 
-        <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add color rule</a>
-    </fieldset>
+    <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add color rule</a>
+</fieldset>
 
-    <fieldset id="nodeThreshold" class="modal custom-config-window hide fade" data-keyboard="true"  tabindex="-1">
-        <div class="close-panel"><i class="icon-remove close-modal">&nbsp;</i></div>
-        <h2>Threshold Filter</h2>
+<fieldset id="nodeThreshold" class="modal custom-config-window hide fade" data-keyboard="true" tabindex="-1">
+    <div class="close-panel"><i class="icon-remove close-modal">&nbsp;</i></div>
+    <h2>Threshold Filter</h2>
 
-        <a href="#" class="tooltip configTip"
-           title="Specify an omit threshold for any/every type of node. Nodes below the threshold are ignored.">?</a>
+    <a href="#" class="tooltip configTip"
+       title="Specify an omit threshold for any/every type of node. Nodes below the threshold are ignored.">?</a>
 
-        <div class="field">
-            <label class="label-bold">Node:</label>
-            <select name="xThresholdType" id="xThresholdType">
-                <option>Source</option>
-                <option>Event</option>
-                <option>Target</option>
-                <option>All</option>
-            </select>
+    <div class="field">
+        <label class="label-bold">Node:</label>
+        <select name="xThresholdType" id="xThresholdType">
+            <option>Source</option>
+            <option>Event</option>
+            <option>Target</option>
+            <option>All</option>
+        </select>
 
-            <div class="alert alert-error validation-message hide" data-validation-for="#xThresholdType">
+        <div class="alert alert-error validation-message hide" data-validation-for="#xThresholdType">
                 <span>
                     Please, select rule target
                 </span>
-            </div>
         </div>
+    </div>
 
-        <div class="field">
-            <label class="label-bold">Threshold:</label>
-            <input type="text" name="xThresholdSize" id="xThresholdSize"/>
-            <div class="alert alert-error validation-message hide" data-validation-for="#xThresholdSize">
+    <div class="field">
+        <label class="label-bold">Threshold:</label>
+        <input type="text" name="xThresholdSize" id="xThresholdSize"/>
+
+        <div class="alert alert-error validation-message hide" data-validation-for="#xThresholdSize">
                 <span>
                     Please, enter threshold value
                 </span>
-            </div>
         </div>
+    </div>
 
-        <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add omit threshold rule</a>
+    <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add omit threshold rule</a>
 
-        <div class="cErrorConfig"><span id="thresholdE" class="cErrorMsg"></span></div>
-    </fieldset>
+    <div class="cErrorConfig"><span id="thresholdE" class="cErrorMsg"></span></div>
+</fieldset>
 
-    <div class="clear"></div>
-    <br/><br/>
+<div class="clear"></div>
+<br/><br/>
 
-    <fieldset id="nodeSize" class="modal custom-config-window hide fade"  data-keyboard="true"  tabindex="-1">
-        <div class="close-panel"><i class="icon-remove close-modal">&nbsp;</i></div>
+<fieldset id="nodeSize" class="modal custom-config-window hide fade" data-keyboard="true" tabindex="-1">
+    <div class="close-panel"><i class="icon-remove close-modal">&nbsp;</i></div>
 
-        <h2>Node Size</h2>
+    <h2>Node Size</h2>
 
-        <a href="#" class="tooltip configTip"
-           title="Specify settings for size of the nodes. This setting (for example) can be used to identify the frequency of a node using 'Number of occurences'; the size of each node will be proportionate to its frequency in the log.">?</a>
+    <a href="#" class="tooltip configTip"
+       title="Specify settings for size of the nodes. This setting (for example) can be used to identify the frequency of a node using 'Number of occurences'; the size of each node will be proportionate to its frequency in the log.">?</a>
 
-        <div class="field">
-            <label class="label-bold">Node:</label>
-            <select name="xSizeType" id="xSizeType">
-                <option>Source</option>
-                <option>Event</option>
-                <option>Target</option>
-                <option>All</option>
-            </select>
+    <div class="field">
+        <label class="label-bold">Node:</label>
+        <select name="xSizeType" id="xSizeType">
+            <option>Source</option>
+            <option>Event</option>
+            <option>Target</option>
+            <option>All</option>
+        </select>
 
-             <div class="alert alert-error validation-message hide" data-validation-for="#xSizeType">
+        <div class="alert alert-error validation-message hide" data-validation-for="#xSizeType">
                 <span>
                     Please, select rule target
                 </span>
-            </div>
         </div>
+    </div>
 
-        <label class="label-bold">Condition</label>
+    <label class="label-bold">Condition</label>
 
 
-        <div class="field">
-            <label class="label-bold"><input type="radio" name="xSizeRadio" id="xSizeRadioExp" checked="checked" value="exp"/>Expression:<br />
-                <input type="text" name="xSizeCondition" id="xSizeCondition" class="long"/>
-                <span class="muted">e.g.: $fields[2]</span>
-            </label>
+    <div class="field">
+        <label class="label-bold"><input type="radio" name="xSizeRadio" id="xSizeRadioExp" checked="checked"
+                                         value="exp"/>Expression:<br/>
+            <input type="text" name="xSizeCondition" id="xSizeCondition" class="long"/>
+            <span class="muted">e.g.: $fields[2]</span>
+        </label>
 
-            <div class="alert alert-error validation-message hide" data-validation-for="#xSizeCondition">
+        <div class="alert alert-error validation-message hide" data-validation-for="#xSizeCondition">
                 <span>
                     Please, enter size condition
                 </span>
-            </div>
-            <br/>
         </div>
+        <br/>
+    </div>
 
-        <div class="field">
-            <label class="label-bold"><input type="radio" name="xSizeRadio" id="xSizeRadioPre" value="pre" />Predefined:<br />
-                <select name="xSizePreType" id="xSizePreType">
-                    <option value="num">Number of occurrences</option>
-                    <option value="third">Third data column</option>
-                    <option value="fourth">Fourth data column</option>
-                </select>
-            </label>
+    <div class="field">
+        <label class="label-bold"><input type="radio" name="xSizeRadio" id="xSizeRadioPre" value="pre"/>Predefined:<br/>
+            <select name="xSizePreType" id="xSizePreType">
+                <option value="num">Number of occurrences</option>
+                <option value="third">Third data column</option>
+                <option value="fourth">Fourth data column</option>
+            </select>
+        </label>
+    </div>
+
+    <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add size rule</a>
+</fieldset>
+
+<fieldset id="maxNodeSize" class="modal custom-config-window hide fade" data-keyboard="true" tabindex="-1">
+    <div class="close-panel"><i class="icon-remove close-modal">&nbsp;</i></div>
+    <h2>Max node size</h2>
+
+    <div class="field">
+        <div>
+            This is global rule and it can be added only one per configuration. Remove existing value
+            to provide new.
         </div>
+        <br>
+        <label class="label-bold">Max node size<br/>
+            <input type="text" name="xSizeMaxSize" id="xSizeMaxSize"/>
+        </label>
 
-        <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add size rule</a>
-    </fieldset>
-
-    <fieldset id="maxNodeSize" class="modal custom-config-window hide fade" data-keyboard="true"  tabindex="-1">
-        <div class="close-panel"><i class="icon-remove close-modal">&nbsp;</i></div>
-        <h2>Max node size</h2>
-        <div class="field">
-            <div>
-                This is global rule and it can be added only one per configuration. Remove existing value
-                to provide new.
-            </div><br>
-            <label class="label-bold">Max node size<br/>
-                <input type="text" name="xSizeMaxSize" id="xSizeMaxSize"/>
-             </label>
-             <div class="alert alert-error validation-message hide" data-validation-for="#xSizeMaxSize">
+        <div class="alert alert-error validation-message hide" data-validation-for="#xSizeMaxSize">
                 <span>
                     Please, enter max node size
                 </span>
-            </div>
         </div>
+    </div>
 
-        <div class="cErrorConfig"><span id="maxNodeSizeE" class="cErrorMsg"></span></div>
-        <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add max node size</a>
-    </fieldset>
+    <div class="cErrorConfig"><span id="maxNodeSizeE" class="cErrorMsg"></span></div>
+    <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add max node size</a>
+</fieldset>
 
-    <fieldset id="nodeSum" class="modal custom-config-window hide fade" data-keyboard="true"  tabindex="-1">
-        <div class="close-panel"><i class="icon-remove close-modal">&nbsp;</i></div>
-        <h2>Sum Nodes</h2>
+<fieldset id="nodeSum" class="modal custom-config-window hide fade" data-keyboard="true" tabindex="-1">
+    <div class="close-panel"><i class="icon-remove close-modal">&nbsp;</i></div>
+    <h2>Sum Nodes</h2>
 
-        <div class="field">
-            <div>
-                This is global rule and it can be added only one per configuration. Remove existing value
-                to provide new.
-            </div> <br>
-            <label class="label-bold">Sum Nodes<br/>
+    <div class="field">
+        <div>
+            This is global rule and it can be added only one per configuration. Remove existing value
+            to provide new.
+        </div>
+        <br>
+        <label class="label-bold">Sum Nodes<br/>
             <select name="xSumType" id="xSumType">
                 <option id="xSumOptionSource">Source</option>
                 <option id="xSumOptionEvent">Event</option>
                 <option id="xSumOptionTarget">Target</option>
             </select>
-            </label>
-            
-        </div>
+        </label>
 
-        <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add node summing rule</a>
-    </fieldset>
+    </div>
 
-    <div class="clear"></div>
-    <br/><br/>
+    <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add node summing rule</a>
+</fieldset>
 
-    <fieldset id="nodeClustering" class="modal custom-config-window hide fade" data-keyboard="true"  tabindex="-1">
-        <div class="close-panel"><i class="icon-remove close-modal">&nbsp;</i></div>
-        <h2>Clustering</h2>
+<div class="clear"></div>
+<br/><br/>
 
-        <a href="#" class="tooltip configTip"
-           title="Cluster a group of nodes accordingly to a property. For example: You can cluster all nodes of Class A IP as a single node/label or you can cluster all nodes with ports greater than 2000 as single node.">?</a>
+<fieldset id="nodeClustering" class="modal custom-config-window hide fade" data-keyboard="true" tabindex="-1">
+    <div class="close-panel"><i class="icon-remove close-modal">&nbsp;</i></div>
+    <h2>Clustering</h2>
 
-        <div class="field">
-            <label class="label-bold">Node:
+    <a href="#" class="tooltip configTip"
+       title="Cluster a group of nodes accordingly to a property. For example: You can cluster all nodes of Class A IP as a single node/label or you can cluster all nodes with ports greater than 2000 as single node.">?</a>
+
+    <div class="field">
+        <label class="label-bold">Node:
             <select name="xClusteringType" id="xClusteringType">
                 <option>Source</option>
                 <option>Event</option>
                 <option>Target</option>
                 <option>All</option>
             </select>
-           </label>
+        </label>
 
-            <div class="alert alert-error validation-message hide" data-validation-for="#xClusteringType">
+        <div class="alert alert-error validation-message hide" data-validation-for="#xClusteringType">
                 <span>
                     Please, enter select rule target
                 </span>
-            </div>
         </div>
+    </div>
 
-        <div class="field"><label><u>Condition</u>:</label></div>
-        <br/><br/>
+    <div class="field"><label><u>Condition</u>:</label></div>
+    <br/><br/>
 
-        <div class="field">
-            <label class="label-bold"><input type="radio" name="xClusteringRadio" id="xClusteringRadioIP" value="ip" checked="checked"/>IP
-                Classes:<br/>
+    <div class="field">
+        <label class="label-bold"><input type="radio" name="xClusteringRadio" id="xClusteringRadioIP" value="ip"
+                                         checked="checked"/>IP
+            Classes:<br/>
             <select name="xClusteringIPType" id="xClusteringIPType">
                 <option value="a">Class A</option>
                 <option value="b">Class B</option>
                 <option value="c">Class C</option>
             </select>
-            </label>
-        </div>
+        </label>
+    </div>
 
-        <div class="field">
-            <label class="label-bold"><input type="radio" name="xClusteringRadio" id="xClusteringRadioPort" value="port"
-                          checked="checked"/>Port:<br/>
+    <div class="field">
+        <label class="label-bold"><input type="radio" name="xClusteringRadio" id="xClusteringRadioPort" value="port"
+                                         checked="checked"/>Port:<br/>
             <input type="text" name="xClusteringPort" id="xClusteringPort" value="2000"/>
-                <span class="muted">e.g.: 2000 -- would cluster all ports '> 2000'.</span>
-                <div class="alert alert-error validation-message hide" data-validation-for="#xClusteringPort">
+            <span class="muted">e.g.: 2000 -- would cluster all ports '> 2000'.</span>
+
+            <div class="alert alert-error validation-message hide" data-validation-for="#xClusteringPort">
                     <span>
                         Please, enter clustering port
                     </span>
-                </div>
-            </label>
+            </div>
+        </label>
 
 
-        </div>
+    </div>
 
-        <div class="field">
-            <label class="label-bold"><input type="radio" name="xClusteringRadio" id="xClusteringRadioExp" value="exp"/>Expression:<br/>
+    <div class="field">
+        <label class="label-bold"><input type="radio" name="xClusteringRadio" id="xClusteringRadioExp" value="exp"/>Expression:<br/>
             <input type="text" name="xClusteringCondition" id="xClusteringCondition" class="long"/>
-             <span class="muted">e.g.: regex_replace("(\\d\+)")."/8" if ($fields[0]!="192.168.0.1")</span>
-            </label>
+            <span class="muted">e.g.: regex_replace("(\\d\+)")."/8" if ($fields[0]!="192.168.0.1")</span>
+        </label>
 
-             <div class="alert alert-error validation-message hide" data-validation-for="#xClusteringCondition">
+        <div class="alert alert-error validation-message hide" data-validation-for="#xClusteringCondition">
                     <span>
                         Please, enter clustering condition
                     </span>
-            </div>
-
         </div>
 
-        <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add node clustering rule</a>
-    </fieldset>
+    </div>
 
-    <fieldset id="customLine" class="modal custom-config-window hide fade" data-keyboard="true"  tabindex="-1">
-        <div class="close-panel"><i class="icon-remove close-modal">&nbsp;</i></div>
-        <h2>Custom Line</h2>
+    <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add node clustering rule</a>
+</fieldset>
 
-        <a href="#" class="tooltip configTip"
-           title="Add any custom line to the configuration page. The lines are parsed as-is.">?</a>
+<fieldset id="customLine" class="modal custom-config-window hide fade" data-keyboard="true" tabindex="-1">
+    <div class="close-panel"><i class="icon-remove close-modal">&nbsp;</i></div>
+    <h2>Custom Line</h2>
 
-        <input type="text" name="xCustomCondition" id="xCustomCondition" class="long"/>
-        <span class="muted">e.g.: variable=@violation=("Backdoor Access");</span>
+    <a href="#" class="tooltip configTip"
+       title="Add any custom line to the configuration page. The lines are parsed as-is.">?</a>
 
-        <div class="alert alert-error validation-message hide" data-validation-for="#xCustomCondition">
+    <input type="text" name="xCustomCondition" id="xCustomCondition" class="long"/>
+    <span class="muted">e.g.: variable=@violation=("Backdoor Access");</span>
+
+    <div class="alert alert-error validation-message hide" data-validation-for="#xCustomCondition">
                 <span>
                     Please, enter custom rule
                 </span>
-        </div>
+    </div>
 
-        <br/>
-        <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add custom config line</a>
-    </fieldset>
-
-
-    </fieldset>
-    </fieldset>
+    <br/>
+    <a class="btn add-rule-button" href="#"><i class="icon-plus-sign"></i>&nbsp;Add custom config line</a>
 </fieldset>
+
+
+</fieldset>
+</fieldset>
+</fieldset>
+</div>
+</div>

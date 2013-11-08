@@ -1,47 +1,52 @@
 {% load widget_tweaks %}
-<fieldset>
-    <a href="#">
-        <legend data-toggle="collapse" data-target="#mainSettings">
-            <i class="icon-arrow-down"></i>
-            Main Settings</legend>
-    </a>
+
+<div class="accordion-group">
+    <div class="accordion-heading">
+        <a href="#mainSettingsCollapse" class="accordion-toggle" data-toggle="collapse" data-parent="#settings-accordion">
+
+            <h3><i class="icon-arrow-down"></i>Main Settings</h3>
+        </a>
+    </div>
+
+    <div class="accordion-body collapse" id="mainSettingsCollapse">
+        <fieldset>
+            <fieldset id="mainSettings">
+                <label class="checkbox" title="Check to print the number of instances of each node present.">
+                    {{ form.printNodeCount.errors }}
+                    {{ form.printNodeCount }}Print node count
+                </label>
 
 
-    <fieldset id="mainSettings">
-        <label class="checkbox" title="Check to print the number of instances of each node present.">
-            {{ form.printNodeCount.errors }}
-            {{ form.printNodeCount }}Print node count
-        </label>
+                <label class="checkbox"
+                       title="Split source and target as seperate nodes (otherwise same node with two edges).">
 
+                    {{ form.splitNodes.errors }}
+                    {{ form.splitNodes }}Split source and target nodes
+                </label>
 
-        <label class="checkbox"
-               title="Split source and target as seperate nodes (otherwise same node with two edges).">
+                <fieldset id="splittingModes" class="hide">
 
-            {{ form.splitNodes.errors }}
-            {{ form.splitNodes }}Split source and target nodes
-        </label>
+                    {{ form.splitMode.errors }}
+                    <label>Splitting:</label>
+                    {{ form.splitMode }} <a href="#" class="tooltip"
+                                            title="Splitting mode. See: http://afterglow.sourceforge.net/configuration.jpg for an example.">?</a>
 
-        <fieldset id="splittingModes" class="hide">
+                </fieldset>
 
-            {{ form.splitMode.errors }}
-            <label>Splitting:</label>
-            {{ form.splitMode }} <a href="#" class="tooltip"
-                                    title="Splitting mode. See: http://afterglow.sourceforge.net/configuration.jpg for an example.">?</a>
+                <label class="input-medium" title="HEX colour for the text labels used on the graph.">
 
-        </fieldset>
+                    {{ form.textLabel.errors }}
+                    <label>Text label colour:</label>
+                    {{ form.textLabel }}
 
-        <label class="input-medium" title="HEX colour for the text labels used on the graph.">
-
-            {{ form.textLabel.errors }}
-            <label>Text label colour:</label>
-            {{ form.textLabel }}
-
-            <div class="alert alert-error validation-message hide" data-validation-for="#id_textLabel">
+                    <div class="alert alert-error validation-message hide" data-validation-for="#id_textLabel">
                 <span>
                     Please, enter color in hexadecimal format(e.g. #000000)
                 </span>
-            </div>
+                    </div>
 
-        </label>
-    </fieldset>
-</fieldset>
+                </label>
+            </fieldset>
+        </fieldset>
+    </div>
+</div>

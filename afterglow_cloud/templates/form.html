@@ -26,11 +26,13 @@
 
         {% include "form_partials/input_sources.html" %}
 
-        {% include "form_partials/main_settings.html" %}
+        <div class="accordion" id="settings-accordion">
+            {% include "form_partials/main_settings.html" %}
 
-        {% include "form_partials/advanced_settings.html" %}
+            {% include "form_partials/advanced_settings.html" %}
 
-        {% include "form_partials/configuration.html" %}
+            {% include "form_partials/configuration.html" %}
+        </div>
 
 
         <br/><br/>
@@ -55,9 +57,7 @@
     {% endif %}
 
     <script type="text/javascript">
-        $('#mainSettings').collapse('hide');
-        $('#advancedSettings').collapse('hide');
-        $('#configuration').collapse('hide');
+
 
 
         toggleVisibilityRadio = function () {

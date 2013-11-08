@@ -1,77 +1,78 @@
-<fieldset>
-    <a href="#">
-        <legend data-toggle="collapse" data-target="#advancedSettings">
-            <i class="icon-arrow-down"></i>
-                Advanced Settings
-            
-        </legend>
-    </a>
-    <fieldset id="advancedSettings">
-        <label class="input-medium"
-               title="Skips the specified number of lines from the data-file (say for example, header data).">
-            Skip lines
-            {{ form.skipLines.errors }}
-            {{ form.skipLines }}
+<div class="accordion-group">
+    <div class="accordion-heading">
+        <a href="#advancedSettingsCollapse" class="accordion-toggle" data-toggle="collapse" data-parent="#settings-accordion"><h3><i class="icon-arrow-down"></i>Advanced Settings</h3></a>
+    </div>
 
-            <div class="alert alert-error validation-message hide" data-validation-for="#id_skipLines">
+    <div class="accordion-body collapse" id="advancedSettingsCollapse">
+        <fieldset>
+            <fieldset id="advancedSettings">
+                <label class="input-medium"
+                       title="Skips the specified number of lines from the data-file (say for example, header data).">
+                    Skip lines
+                    {{ form.skipLines.errors }}
+                    {{ form.skipLines }}
+
+                    <div class="alert alert-error validation-message hide" data-validation-for="#id_skipLines">
                 <span>
                     Please, enter number of lines to skip or 0
                 </span>
-            </div>
-        </label>
+                    </div>
+                </label>
 
-        <label class="input-medium" title="Maximum number of lines to read from the data-file.">
+                <label class="input-medium" title="Maximum number of lines to read from the data-file.">
 
-            {{ form.maxLines.errors }}
-            Maximum lines
-            {{ form.maxLines }}
+                    {{ form.maxLines.errors }}
+                    Maximum lines
+                    {{ form.maxLines }}
 
-            <div class="alert alert-error validation-message hide" data-validation-for="#id_maxLines">
+                    <div class="alert alert-error validation-message hide" data-validation-for="#id_maxLines">
                 <span>
                     Please, enter maximum amount of lines to be processed
                 </span>
-            </div>
-        </label>
+                    </div>
+                </label>
 
-        <label class="input-medium" title="Omits nodes which occur less than the specified threshold.">
+                <label class="input-medium" title="Omits nodes which occur less than the specified threshold.">
 
-            {{ form.omitThreshold.errors }}
-            Omit threshold for each node
-            {{ form.omitThreshold }}
+                    {{ form.omitThreshold.errors }}
+                    Omit threshold for each node
+                    {{ form.omitThreshold }}
 
-            <div class="alert alert-error validation-message hide" data-validation-for="#id_omitThreshold">
+                    <div class="alert alert-error validation-message hide" data-validation-for="#id_omitThreshold">
                 <span>
                     Please, enter number of occurences for node to be displayed
                 </span>
-            </div>
-        </label>
+                    </div>
+                </label>
 
-        <label class="input-medium"
-               title="Omits nodes which have a lesser number of edges originating from them, than the specified threshold.">
+                <label class="input-medium"
+                       title="Omits nodes which have a lesser number of edges originating from them, than the specified threshold.">
 
-            {{ form.sourceFanOut.errors }}
-            Source fan out threshold
-            {{ form.sourceFanOut }}
+                    {{ form.sourceFanOut.errors }}
+                    Source fan out threshold
+                    {{ form.sourceFanOut }}
 
-            <div class="alert alert-error validation-message hide" data-validation-for="#id_sourceFanOut">
+                    <div class="alert alert-error validation-message hide" data-validation-for="#id_sourceFanOut">
                 <span>
                     Please, enter how many output edges source node should have to be displayed
                 </span>
-            </div>
-        </label>
+                    </div>
+                </label>
 
-        <label class="input-medium"
-               title="Omits event nodes which have a lesser number of edges originating form them, than the specified threshold.">
+                <label class="input-medium"
+                       title="Omits event nodes which have a lesser number of edges originating form them, than the specified threshold.">
 
-            {{ form.eventFanOut.errors }}
-            Event fan out threshold
-            {{ form.eventFanOut }}
+                    {{ form.eventFanOut.errors }}
+                    Event fan out threshold
+                    {{ form.eventFanOut }}
 
-            <div class="alert alert-error validation-message hide" data-validation-for="#id_eventFanOut">
+                    <div class="alert alert-error validation-message hide" data-validation-for="#id_eventFanOut">
                 <span>
                     Please, enter how many output edges event node should have to be displayed
                 </span>
-            </div>
-        </label>
-    </fieldset>
-</fieldset>
+                    </div>
+                </label>
+            </fieldset>
+        </fieldset>
+    </div>
+</div>
